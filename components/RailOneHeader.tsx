@@ -1,5 +1,6 @@
 
 import { color } from '@/constant/data';
+import Images from '@/constant/image';
 import React from 'react';
 import {
     Image,
@@ -18,56 +19,7 @@ export function RailOneHeader() {
                 {/* Left */}
                 <TouchableOpacity style={styles.langBtn}>
                     <View style={styles.langIconWrapper}>
-                        <svg
-                            viewBox="0 0 100 100"
-                            style={styles.langIconSvg}
-                        >
-                            {/* English Letter 'A' (Top-Left) */}
-                            <text
-                                x="32"
-                                y="45"
-                                fontSize="28"
-                                fontWeight="900"
-                                fill="#1A47C8"
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                                style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
-                            >
-                                A
-                            </text>
-
-                            {/* Hindi Letter 'अ' (Bottom-Right) */}
-                            <text
-                                x="68"
-                                y="79"
-                                fontSize="28"
-                                fontWeight="900"
-                                fill="#1A47C8"
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                                style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
-                            >
-                                अ
-                            </text>
-
-                            {/* Top-Right Translation Curve */}
-                            <path
-                                d="M 58 24 A 10 10 0 0 1 70 36"
-                                fill="none"
-                                stroke="#1A47C8"
-                                strokeWidth="5.5"
-                                strokeLinecap="round"
-                            />
-
-                            {/* Bottom-Left Translation Curve */}
-                            <path
-                                d="M 42 76 A 10 10 0 0 1 30 64"
-                                fill="none"
-                                stroke="#1A47C8"
-                                strokeWidth="5.5"
-                                strokeLinecap="round"
-                            />
-                        </svg>
+                        <Image source={Images.langIcon} style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }} />
                     </View>
                 </TouchableOpacity>
 
@@ -83,7 +35,7 @@ export function RailOneHeader() {
             size={22}
             color={C.text}
           /> */}
-                    <Image source={require('../assets/images/notification.gif')} style={{ width: 44, height: 44 }} />
+                    <Image source={Images.notification} style={{ width: 44, height: 44 }} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -92,15 +44,22 @@ export function RailOneHeader() {
 
 const styles = StyleSheet.create({
     headerWrapper: {
-        backgroundColor: 'transparent',
+        // backgroundColor: 'transparent',
         overflow: 'hidden',
+        position: 'absolute',
+        top: 0,
+        width: "100%",
+        backgroundColor: '#fff',
+        borderBottomLeftRadius: 35,
+        borderBottomRightRadius: 35,
+        zIndex: 999
     },
 
     header: {
         backgroundColor: '#fff',
         borderBottomLeftRadius: 35,
         borderBottomRightRadius: 35,
-
+        height: 70,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -158,6 +117,7 @@ const styles = StyleSheet.create({
     },
 
     logoContainer: {
+        marginTop: 3,
         alignItems: 'center',
     },
 

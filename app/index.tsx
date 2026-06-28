@@ -1,15 +1,47 @@
+import { router } from "expo-router";
+import { useEffect } from "react";
 
-import { Link } from "expo-router";
-import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import * as SplashScreen from "expo-splash-screen";
+import { getUser } from "../hooks/useAuth";
+
+
+
+SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
-  return (
-    <SafeAreaView>
-      <Link href="/pages/home-page">
-        <Text>Go to Home Page</Text>
-      </Link>
-    </SafeAreaView>
-  );
-}
 
+  useEffect(() => {
+
+    startApp();
+
+  }, []);
+
+  async function startApp() {
+
+    try {
+
+      // Fake loading
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const user = await getUser();
+
+      if (user.isLoggedIn) {
+
+        router.replace("/(auth)/lock");
+
+      } else {
+
+        router.replace("/(auth)/login");
+
+      }
+
+    } finally {
+
+      await SplashScreen.hideAsync();
+
+    }
+
+  }
+
+  return null;
+}

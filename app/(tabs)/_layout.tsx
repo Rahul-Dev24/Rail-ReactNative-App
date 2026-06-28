@@ -1,9 +1,8 @@
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router, Tabs } from "expo-router";
 
-import { RailOneHeader } from '@/components/RailOneHeader';
-import { color } from '@/constant/data';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React from 'react';
 import {
     Platform,
@@ -12,22 +11,38 @@ import {
     View
 } from 'react-native';
 
+export default function TabLayout() {
 
-const HomePage = () => {
+    async function logout() {
+
+        await AsyncStorage.removeItem("token");
+
+        router.replace("/(auth)/login");
+
+    }
 
     return (
+
+        // <View>
+
+        //     <Button title="Logout" onPress={logout} />
+
+        // </View>
+
         <Tabs
             screenOptions={{
-                header: () => <RailOneHeader />,           // custom topbar
-                headerStyle: styles.headerWrapper,                // custom topbar
-                headerTransparent: true,
-                tabBarStyle: styles.tabBar,                // custom tabbar
-                tabBarShowLabel: false,                    // hide default labels
+                headerShown: false,
+                tabBarStyle: styles.tabBar,
+                tabBarShowLabel: false,
+                tabBarItemStyle: {
+                    flex: 1,
+                },
             }}
         >
             <Tabs.Screen
-                name="(tabs)/index"
+                name="home"
                 options={{
+                    // header: () => <RailOneHeader />,
                     tabBarIcon: ({ focused }) => (
                         <TabIcon
                             focused={focused}
@@ -35,8 +50,8 @@ const HomePage = () => {
                             icon={
                                 <Ionicons
                                     name={focused ? 'home' : 'home-outline'}
-                                    size={24}
-                                    color={focused ? color.active : color.inactive}
+                                    size={22}
+                                    color={focused ? C.active : C.inactive}
                                 />
                             }
                         />
@@ -44,7 +59,7 @@ const HomePage = () => {
                 }}
             />
             <Tabs.Screen
-                name="(tabs)/trains"
+                name="trains"
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <TabIcon
@@ -54,7 +69,7 @@ const HomePage = () => {
                                 <MaterialIcons
                                     name="confirmation-number"
                                     size={24}
-                                    color={focused ? color.active : color.inactive}
+                                    color={focused ? C.active : C.inactive}
                                 />
                             }
                         />
@@ -62,7 +77,7 @@ const HomePage = () => {
                 }}
             />
             <Tabs.Screen
-                name="(tabs)/tickets"
+                name="tickets"
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <TabIcon
@@ -71,8 +86,8 @@ const HomePage = () => {
                             icon={
                                 <Ionicons
                                     name={focused ? 'person' : 'person-outline'}
-                                    size={24}
-                                    color={focused ? color.active : color.inactive}
+                                    size={22}
+                                    color={focused ? C.active : C.inactive}
                                 />
                             }
                         />
@@ -80,7 +95,7 @@ const HomePage = () => {
                 }}
             />
             <Tabs.Screen
-                name="(tabs)/stations"
+                name="stations"
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <TabIcon
@@ -89,8 +104,8 @@ const HomePage = () => {
                             icon={
                                 <Ionicons
                                     name="menu"
-                                    size={24}
-                                    color={focused ? color.active : color.inactive}
+                                    size={22}
+                                    color={focused ? C.active : C.inactive}
                                 />
                             }
                         />
@@ -98,12 +113,27 @@ const HomePage = () => {
                 }}
             />
         </Tabs >
-    )
+
+    );
 
 }
 
-export default HomePage;
 
+
+
+
+// ─── Colors (from your screenshot) ───────────────────────────
+const C = {
+    blue: '#0066fe',        // tab bar blue
+    white: '#FFFFFF',
+    inactive: '#A0B0E0',    // inactive tab icon/label
+    active: '#FFFFFF',      // active tab icon/label
+    headerBg: '#FFFFFF',
+    headerBorder: '#F0F0F0',
+    text: '#0A1931',
+};
+
+// ─── Custom Tab Bar Icon ──────────────────────────────────────
 function TabIcon({
     focused,
     icon,
@@ -116,7 +146,15 @@ function TabIcon({
     return (
         <View style={styles.tabItem}>
             {icon}
-            <Text style={[styles.tabLabel, focused ? styles.tabLabelActive : styles.tabLabelInactive]}>
+
+            <Text
+                numberOfLines={1}
+                ellipsizeMode="clip"
+                style={[
+                    styles.tabLabel,
+                    focused ? styles.tabLabelActive : styles.tabLabelInactive,
+                ]}
+            >
                 {label}
             </Text>
         </View>
@@ -126,37 +164,35 @@ function TabIcon({
 
 // ─── Styles ───────────────────────────────────────────────────
 const styles = StyleSheet.create({
-
-    headerWrapper: {
-        backgroundColor: 'transparent',
-        overflow: 'hidden',
-    },
-
     tabBar: {
-        backgroundColor: color.blue,
+        backgroundColor: C.blue,
         borderTopWidth: 0,
-        height: Platform.OS === 'ios' ? 84 : 64,
-        paddingBottom: Platform.OS === 'ios' ? 20 : 0,
+        height: Platform.OS === "ios" ? 84 : 78,
+        paddingBottom: Platform.OS === "ios" ? 20 : 8,
+        paddingTop: 10,
         elevation: 0,
     },
 
     tabItem: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 4,
-        paddingTop: 8,
+        flex: 1,
+        width: 80,
+        alignItems: "center",
+        justifyContent: "center",
     },
 
     tabLabel: {
-        fontSize: 11,
-        fontWeight: '500',
+        fontSize: 10.5,
+        fontWeight: "600",
+        textAlign: "center",
+        marginTop: 6,
+        fontFamily: "app-regular"
     },
 
     tabLabelActive: {
-        color: color.active,
+        color: C.active,
     },
 
     tabLabelInactive: {
-        color: color.inactive,
+        color: C.inactive,
     },
 });
