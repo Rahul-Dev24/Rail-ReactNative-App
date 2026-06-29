@@ -1,12 +1,10 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { router } from "expo-router";
+import { useEffect } from 'react';
 
 export default function trains() {
-    return (
-        <View>
-            <Text>trains</Text>
-        </View>
-    )
-}
+    useEffect(() => {
+        router.replace("/(booking)/upcoming");
+    }, []);
 
-const styles = StyleSheet.create({})
+    return null;
+}

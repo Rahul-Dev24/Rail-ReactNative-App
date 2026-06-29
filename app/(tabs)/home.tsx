@@ -19,7 +19,6 @@ export default function Home() {
             </View>
             <ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.scrollContent} >
                 <HomeScreen />
-                <HomeScreen />
             </ScrollView>
         </SafeAreaView>
     );

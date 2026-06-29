@@ -1,8 +1,11 @@
 import TicketLayout from '@/components/TicketLayout';
 import Images from '@/constant/image';
 import {
-  FontAwesome5
+  Entypo,
+  FontAwesome5,
+  FontAwesome6
 } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import {
   Dimensions,
@@ -168,6 +171,40 @@ export default function HomeScreen() {
       <View style={[styles.sectionContainer, { marginBottom: 30 }]}>
         <Text style={styles.sectionTitle}>Upcoming Journey</Text>
         <TicketLayout />
+      </View>
+
+      <View style={[styles.sectionContainer, { marginBottom: 30 }]}>
+        <Text style={{ ...styles.sectionTitle, marginBottom: -40 }}>Follow Us On Social Media Platforms</Text>
+        <View className="flex-1 justify-center items-center relative" >
+          <Image source={Images.SocialMedia} style={{
+            width: "95%",
+            height: 300,
+            opacity: 0.88, // Adjust opacity (0 to 1)
+          }} resizeMode="contain" />
+          <View className="flex-row justify-center items-center gap-6 absolute" >
+            <FontAwesome6 name="x-twitter" className="p-1 bg-black rounded-full" size={22} color="white" />
+            <FontAwesome5 name="facebook" size={32} color="#0066fe" />
+            <LinearGradient
+              colors={["#833ab4", "#fd1d1d", "#fcb045"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <FontAwesome6
+                name="instagram"
+                size={24}
+                color="white"
+              />
+            </LinearGradient>
+            <Entypo name="youtube" size={35} color="red" />
+          </View>
+        </View>
       </View>
       {/* </ScrollView>
     </SafeAreaView> */}

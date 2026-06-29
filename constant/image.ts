@@ -13,6 +13,8 @@ const Images = {
     fileRefund: require('../assets/images/file-refund.webp'),
     goToWaved: require('../assets/images/go-to-waved.webp'),
     langIcon: require('../assets/images/lang_icon.png'),
+    ticket: require('../assets/images/ticket_white_uts.png'),
+    SocialMedia: require('../assets/images/Social_Media.webp')
 };
 
 export default Images;
