@@ -109,13 +109,13 @@ const styles = StyleSheet.create({
     outerWrapper: {
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#F9FAFB",
+        // backgroundColor: "#F9FAFB",
     },
 
     logoContainer: {
         flexDirection: "row",
         alignItems: "flex-end",
-        backgroundColor: "#FFFFFF",
+        // backgroundColor: "#FFFFFF",
         borderRadius: 6,
     },
 

@@ -59,7 +59,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="trains"
+                name="tickets"
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <TabIcon
@@ -77,7 +77,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="tickets"
+                name="you"
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <TabIcon
@@ -95,7 +95,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="stations"
+                name="menu"
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <TabIcon

@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-export default function stations() {
+export default function Menu() {
     return (
         <View>
-            <Text>stations</Text>
+            <Text>menu</Text>
         </View>
     )
 }

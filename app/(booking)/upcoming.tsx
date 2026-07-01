@@ -1,5 +1,6 @@
 import { TicketCard } from "@/components/Ticket";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function Upcoming() {
@@ -43,7 +44,7 @@ export default function Upcoming() {
                         destinationStation="GUINDY"
                         distance="63 km"
                         onBookAgain={() => console.log("Book Again")}
-                        onViewDetails={() => console.log("View Details")}
+                        onViewDetails={() => router.replace("/view-tickect")}
                     />
                     <TicketCard
                         ticketType="MONTHLY"
