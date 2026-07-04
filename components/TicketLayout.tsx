@@ -13,7 +13,7 @@ const { width } = Dimensions.get('window');
 
 export default function TicketLayout() {
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container} className='h-fit'>
             <View style={styles.ticketWrapper}>
                 <LinearGradient
                     colors={['#3B49A6', '#7156CE', '#AA6EE2']}
@@ -74,10 +74,10 @@ export default function TicketLayout() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
     },
     ticketWrapper: {
         width: '100%',
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
         fontFamily: 'app-regular'
     },
     buttonText: {
-        fontSize: 12,
+        fontSize: 9,
         fontWeight: '400',
         color: '#FFFFFF',
         letterSpacing: 0.2,

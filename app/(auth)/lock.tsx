@@ -14,18 +14,62 @@ import {
     TextInput,
     TextInputKeyPressEventData,
     TouchableOpacity,
+    useWindowDimensions,
     View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PIN_LENGTH = 6;
+
+// Baseline device used when the original spacing values (pt-18, mb-20, etc.)
+// were designed against — a standard ~6.1" phone.
+const BASELINE_WIDTH = 390;
+const BASELINE_HEIGHT = 844;
 
 export default function LoginMpinScreen() {
     const [pin, setPin] = useState<string[]>(Array(PIN_LENGTH).fill(''));
     const [enabled, setEnabled] = useState(false);
     const inputRefs = useRef<Array<TextInput | null>>([]);
 
+    const { width, height } = useWindowDimensions();
+
+    // Scale factor relative to baseline, clamped so tiny phones don't
+    // shrink to nothing and tablets don't blow up the spacing absurdly.
+    const heightScale = height / BASELINE_HEIGHT;
+    const widthScale = width / BASELINE_WIDTH;
+    const scaleFactor = Math.min(Math.max(heightScale, 0.78), 1.35);
+    const hScaleFactor = Math.min(Math.max(widthScale, 0.8), 1.5);
+
+    // scale() = vertical spacing/fonts, hscale() = horizontal spacing
+    const scale = (size: number) => Math.round(size * scaleFactor);
+    const hscale = (size: number) => Math.round(size * hScaleFactor);
+
+    // Tailwind's spacing unit is 4px, so pt-18 = 72px, mt-18 = 72px,
+    // mb-15 = 60px, mb-20 = 80px, etc. Reproducing those exact original
+    // values here, just scaled to the current device.
+    const spacing = {
+        contentPaddingTop: scale(20),   // pt-18
+        titleMarginTop: scale(65),      // mt-18
+        titleMarginBottom: scale(32),   // mb-8
+        welcomeMarginBottom: scale(28), // mb-8
+        instructionMarginBottom: scale(16), // mb-4
+        pinMarginBottom: scale(14),     // mb-6
+        linksMarginBottom: scale(62),   // mb-20
+        dividerMarginBottom: scale(56), // mb-15
+        biometricRowMarginBottom: scale(40), // mb-10
+        noteMarginBottom: scale(16),    // mb-4
+        horizontalPadding: hscale(24),  // px-6
+        pinGap: hscale(8),
+    };
+
+    const pinBoxSize = Math.min(Math.max(scale(50) * (hScaleFactor / scaleFactor > 1 ? 1 : hScaleFactor), 40), 64);
+
+    const titleFontSize = scale(18);
+    const welcomeFontSize = scale(15);
+    const bodyFontSize = scale(13);
+    const smallFontSize = scale(14);
+
     const handleChange = (text: string, index: number) => {
-        // Only allow single digits
         const digit = text.replace(/[^0-9]/g, '').slice(-1);
 
         const newPin = [...pin];
@@ -42,8 +86,10 @@ export default function LoginMpinScreen() {
 
             if (checkPin === '111111') {
                 setTimeout(() => {
-                    router.replace("/(tabs)/home");
+                    router.replace('/(tabs)/home');
                 }, 2000);
+            } else if (newPin.length === 6) {
+                setPin(Array(PIN_LENGTH).fill(''));
             }
         }
     };
@@ -52,18 +98,26 @@ export default function LoginMpinScreen() {
         e: NativeSyntheticEvent<TextInputKeyPressEventData>,
         index: number,
     ) => {
-        // Only move focus back when the current box is already empty.
-        // Do NOT clear the previous box's digit here — that happens on the
-        // user's *next* backspace press (handled by onChangeText), not this one.
-        if (e.nativeEvent.key === 'Backspace' && !pin[index] && index > 0) {
-            inputRefs.current[index - 1]?.focus();
+        if (e.nativeEvent.key === 'Backspace') {
+            if (pin[index]) {
+                const newPin = [...pin];
+                newPin[index] = '';
+                setPin(newPin);
+                return;
+            }
+
+            if (index > 0) {
+                const newPin = [...pin];
+                newPin[index - 1] = '';
+                setPin(newPin);
+                inputRefs.current[index - 1]?.focus();
+            }
         }
     };
 
     const handleLogin = () => {
         const mpin = pin.join('');
         if (mpin.length !== PIN_LENGTH) {
-            // In production, surface this inline rather than as an alert
             console.warn('Enter all 6 digits of your mPIN');
             return;
         }
@@ -77,120 +131,181 @@ export default function LoginMpinScreen() {
     };
 
     return (
-        <LinearGradient
-            colors={['#DFF6FB', '#EAF8FC', '#FFFFFF']}
-            className="flex-1"
-        >
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                className="flex-1"
-            >
-                <ScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
-                    keyboardShouldPersistTaps="handled"
+        <LinearGradient colors={['#DFF6FB', '#EAF8FC', '#FFFFFF']} style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                    style={{ flex: 1 }}
                 >
-                    <View className="flex-1 px-6 pt-16">
-                        {/* Logo */}
-                        <RailOneLogo />
+                    <ScrollView
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        keyboardShouldPersistTaps="handled"
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <View
+                            style={{
+                                flex: 1,
+                                paddingHorizontal: spacing.horizontalPadding,
+                                paddingTop: spacing.contentPaddingTop,
+                            }}
+                        >
+                            {/* Logo */}
+                            <RailOneLogo />
 
-                        {/* Title */}
-                        <Text className="text-3xl font-extrabold text-slate-800 text-center mb-6">
-                            Login using mPIN
-                        </Text>
-
-                        {/* Welcome */}
-                        <Text className="text-lg text-slate-500 text-center mb-8">
-                            Welcome Rahul Singh!
-                        </Text>
-
-                        {/* Instruction */}
-                        <Text className="text-base text-slate-500 text-center mb-4">
-                            Enter mPIN below
-                        </Text>
-
-                        {/* PIN inputs */}
-                        <View className="flex-row justify-between mb-6">
-                            {pin.map((digit, index) => (
-                                <TextInput
-                                    key={index}
-                                    ref={(ref) => { inputRefs.current[index] = ref }}
-                                    value={digit}
-                                    onChangeText={(text) => handleChange(text, index)}
-                                    onKeyPress={(e) => handleKeyPress(e, index)}
-                                    keyboardType="number-pad"
-                                    maxLength={1}
-                                    secureTextEntry
-                                    className="w-[15%] h-16 bg-white border border-sky-200 rounded-xl text-center text-2xl text-slate-800"
-                                    style={{ elevation: 1 }}
-                                />
-                            ))}
-                        </View>
-
-                        {/* Links row */}
-                        <View className="flex-row justify-between mb-10">
-                            <TouchableOpacity>
-                                <Text className="text-base font-bold text-indigo-950">
-                                    Forgot Password?
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Text className="text-base font-bold text-indigo-950">
-                                    Reset mPIN?
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        {/* Divider */}
-                        <View className="flex-row items-center mb-10">
-                            <View className="flex-1 border-t border-dashed border-slate-400" />
-                            <Text className="mx-3 text-slate-500 text-base font-semibold">
-                                Enable biometric
+                            {/* Title */}
+                            <Text
+                                style={{
+                                    fontFamily: 'app-regular',
+                                    fontSize: titleFontSize,
+                                    fontWeight: 'bold',
+                                    color: '#293446',
+                                    textAlign: 'center',
+                                    marginTop: spacing.titleMarginTop,
+                                    marginBottom: spacing.titleMarginBottom,
+                                }}
+                            >
+                                Login using mPIN
                             </Text>
-                            <View className="flex-1 border-t border-dashed border-slate-400" />
-                        </View>
 
-                        {/* Biometric row + Login button */}
-                        <View className="flex-row items-center justify-between mb-10">
-                            <View className="flex-row">
-                                <TouchableOpacity
-                                    onPress={() => handleBiometric('face')}
-                                    className="mr-6"
-                                    accessibilityLabel="Login with Face ID"
-                                >
-                                    <MaterialCommunityIcons
-                                        name="face-recognition"
-                                        size={36}
-                                        color="#475569"
+                            {/* Welcome */}
+                            <Text
+                                style={{
+                                    fontFamily: 'app-regular',
+                                    fontSize: welcomeFontSize,
+                                    color: '#64748b',
+                                    textAlign: 'center',
+                                    marginBottom: spacing.welcomeMarginBottom,
+                                }}
+                            >
+                                Welcome Rahul Singh!
+                            </Text>
+
+                            {/* Instruction */}
+                            <Text
+                                style={{
+                                    fontFamily: 'app-regular',
+                                    fontSize: bodyFontSize,
+                                    color: '#64748b',
+                                    textAlign: 'center',
+                                    marginBottom: spacing.instructionMarginBottom,
+                                }}
+                            >
+                                Enter mPIN below
+                            </Text>
+
+                            {/* PIN inputs */}
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    marginBottom: spacing.pinMarginBottom,
+                                }}
+                            >
+                                {pin.map((digit, index) => (
+                                    <TextInput
+                                        key={index}
+                                        value={digit}
+                                        ref={(ref) => {
+                                            inputRefs.current[index] = ref;
+                                        }}
+                                        onChangeText={(text) => handleChange(text, index)}
+                                        onKeyPress={(e) => handleKeyPress(e, index)}
+                                        keyboardType="number-pad"
+                                        maxLength={1}
+                                        autoCorrect={false}
+                                        autoCapitalize="none"
+                                        contextMenuHidden={true}
+                                        selectTextOnFocus={true}
+                                        style={{
+                                            width: pinBoxSize,
+                                            height: pinBoxSize,
+                                            borderWidth: 1,
+                                            borderColor: '#a7bfdd',
+                                            borderRadius: 12,
+                                            textAlign: 'center',
+                                            fontSize: pinBoxSize * 0.44,
+                                            backgroundColor: '#FFF',
+                                        }}
                                     />
+                                ))}
+                            </View>
+
+                            {/* Links row */}
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    marginBottom: spacing.linksMarginBottom,
+                                }}
+                            >
+                                <TouchableOpacity>
+                                    <Text style={{ fontSize: bodyFontSize, fontWeight: 'bold', fontFamily: 'app-regular', color: '#1e1b4b' }}>
+                                        Forgot Password?
+                                    </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => handleBiometric('fingerprint')}
-                                    accessibilityLabel="Login with fingerprint"
-                                >
-                                    <MaterialCommunityIcons
-                                        name="fingerprint"
-                                        size={36}
-                                        color="#475569"
-                                    />
+                                <TouchableOpacity>
+                                    <Text style={{ fontSize: bodyFontSize, fontWeight: 'bold', fontFamily: 'app-regular', color: '#1e1b4b' }}>
+                                        Reset mPIN?
+                                    </Text>
                                 </TouchableOpacity>
                             </View>
 
-                            <Switch value={enabled} onValueChange={setEnabled} />
+                            {/* Divider */}
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: spacing.dividerMarginBottom }}>
+                                <View style={{ flex: 1, borderTopWidth: 1, borderStyle: 'dashed', borderColor: '#cbd5e1' }} />
+                                <Text style={{ marginHorizontal: 12, color: '#94a3b8', fontFamily: 'app-regular', fontSize: bodyFontSize, fontWeight: '600' }}>
+                                    Enable biometric
+                                </Text>
+                                <View style={{ flex: 1, borderTopWidth: 1, borderStyle: 'dashed', borderColor: '#cbd5e1' }} />
+                            </View>
 
+                            {/* Biometric row + Login button */}
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    marginBottom: spacing.biometricRowMarginBottom,
+                                }}
+                            >
+                                <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity
+                                        onPress={() => handleBiometric('face')}
+                                        style={{ marginRight: hscale(24) }}
+                                        accessibilityLabel="Login with Face ID"
+                                    >
+                                        <MaterialCommunityIcons name="face-recognition" size={scale(32)} color="gray" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => handleBiometric('fingerprint')}
+                                        accessibilityLabel="Login with fingerprint"
+                                    >
+                                        <MaterialCommunityIcons name="fingerprint" size={scale(38)} color="#475569" />
+                                    </TouchableOpacity>
+                                </View>
+
+                                <Switch value={enabled} onValueChange={setEnabled} />
+                            </View>
+
+                            <View style={{ marginBottom: spacing.noteMarginBottom }}>
+                                <Text style={{ color: '#4b5563', fontSize: smallFontSize }}>
+                                    By enabling biometric authentication you will be
+                                </Text>
+                                <Text style={{ color: '#4b5563', fontSize: smallFontSize }}>
+                                    able to login through your device set biometric
+                                </Text>
+                            </View>
+
+                            {/* Different user */}
+                            <TouchableOpacity style={{ alignItems: 'center', paddingBottom: scale(16) }}>
+                                <Text style={{ fontSize: welcomeFontSize, fontWeight: '800', color: '#1e1b4b' }}>
+                                    Different User?
+                                </Text>
+                            </TouchableOpacity>
                         </View>
-                        <View className='flex items-start justify-center mb-4'>
-                            <Text className="text-gray-600 text-[14px]">By enabling biometric authentication you will be</Text>
-                            <Text className="text-gray-600 text-[14px]">able to login through your device set biometric</Text>
-                        </View>
-                        {/* Different user */}
-                        <TouchableOpacity className="items-center">
-                            <Text className="text-lg font-extrabold text-indigo-950">
-                                Different User?
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
+                    </ScrollView>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
         </LinearGradient>
     );
 }

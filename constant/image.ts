@@ -14,7 +14,13 @@ const Images = {
     goToWaved: require('../assets/images/go-to-waved.webp'),
     langIcon: require('../assets/images/lang_icon.png'),
     ticket: require('../assets/images/ticket_white_uts.png'),
-    SocialMedia: require('../assets/images/Social_Media.webp')
+    SocialMedia: require('../assets/images/Social_Media.webp'),
+    bridge: require('../assets/images/bridge-clouds-valley.jpg'),
+    station: require('../assets/images/station-night.jpg'),
+    steamTrain: require('../assets/images/steam-train-heritage.jpg'),
+    greenValley: require('../assets/images/viaduct-green-valley.jpg'),
+    track: require('../assets/images/track.jpeg'),
+
 };
 
 export default Images;

@@ -16,7 +16,6 @@ const NOTCH_SIZE = 25;
 const BORDER_COLOR = '#F2AC6D';
 const BACKGROUND = '#F6F6F6';
 
-
 export const TicketCard: React.FC<TicketCardProps> = ({
     ticketType = 'MONTHLY',
     utsCode = 'XA74EDI00C',
@@ -29,131 +28,124 @@ export const TicketCard: React.FC<TicketCardProps> = ({
 }) => {
     return (
         <View className='flex flex-row w-full'>
-            <View className='w-[4%] bg-white z-50'></View>
-            <View style={styles.card}>
+            <View className='w-[4%] bg-white z-50' />
 
-                {/* ── Top Section ── */}
-                <View style={styles.topSection}>
+            {/* Wrapper holds the shadow layer + the actual card as two separate views */}
+            <View style={styles.cardWrapper}>
 
-                    {/* Row 1: Badge + UTS Code */}
-                    <View style={styles.row}>
-                        <View style={styles.badge}>
-                            <Text style={styles.badgeText}>Unreserved</Text>
-                        </View>
+                {/* Android shadow only — no children, so nothing to clip */}
+                <View style={styles.cardShadow} />
+
+                <View style={styles.card}>
+
+                    {/* ── Top Section ── */}
+                    <View style={styles.topSection}>
+
                         <View style={styles.row}>
-                            <Text style={styles.utsLabel}>UTS: </Text>
-                            <Text style={styles.utsValue}>{utsCode}</Text>
+                            <View style={styles.badge}>
+                                <Text style={styles.badgeText}>Unreserved</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.utsLabel}>UTS: </Text>
+                                <Text style={styles.utsValue}>{utsCode}</Text>
+                            </View>
                         </View>
+
+                        <View style={styles.row}>
+                            <View>
+                                <Text style={styles.fieldLabel}>Ticket Type</Text>
+                                <Text style={styles.fieldValue}>{ticketType}</Text>
+                            </View>
+                            <View style={{ alignItems: 'flex-end' }}>
+                                <Text style={styles.fieldLabel}>Booking Date</Text>
+                                <Text style={styles.fieldValue}>{bookingDate}</Text>
+                            </View>
+                        </View>
+
+                        <View className='-mt-1 -mb-3' style={styles.row}>
+                            <Text style={styles.stationText} numberOfLines={1}>
+                                {sourceStation}
+                            </Text>
+                            <Text style={styles.distanceText}>— {distance} —</Text>
+                            <Text
+                                style={[styles.stationText, { textAlign: 'right' }]}
+                                numberOfLines={1}
+                            >
+                                {destinationStation}
+                            </Text>
+                        </View>
+
                     </View>
 
-                    {/* Row 2: Ticket Type + Booking Date */}
-                    <View style={styles.row}>
-                        <View>
-                            <Text style={styles.fieldLabel}>Ticket Type</Text>
-                            <Text style={styles.fieldValue}>{ticketType}</Text>
-                        </View>
-                        <View style={{ alignItems: 'flex-end' }}>
-                            <Text style={styles.fieldLabel}>Booking Date</Text>
-                            <Text style={styles.fieldValue}>{bookingDate}</Text>
-                        </View>
+                    {/* ── Divider Row (notches + dashes) ── */}
+                    <View style={styles.dividerRow}>
+                        <View style={[styles.notch, styles.notchLeft]} />
+                        <View style={styles.dashedLine} />
+                        <View style={[styles.notch, styles.notchRight]} />
                     </View>
 
-                    {/* Row 3: Source — distance — Destination */}
-                    <View style={styles.row}>
-                        <Text style={styles.stationText} numberOfLines={1}>
-                            {sourceStation}
-                        </Text>
-                        <Text style={styles.distanceText}>— {distance} —</Text>
-                        <Text
-                            style={[styles.stationText, { textAlign: 'right' }]}
-                            numberOfLines={1}
+                    {/* ── Bottom Section: Actions ── */}
+                    <View className='-mt-4' style={styles.bottomSection}>
+                        <TouchableOpacity
+                            style={styles.actionButton}
+                            onPress={onBookAgain}
+                            activeOpacity={0.6}
                         >
-                            {destinationStation}
-                        </Text>
+                            <Text style={styles.actionText}>Book Again</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.verticalSep} />
+
+                        <TouchableOpacity
+                            style={styles.actionButton}
+                            onPress={onViewDetails}
+                            activeOpacity={0.6}
+                        >
+                            <Text style={styles.actionText}>View Details</Text>
+                        </TouchableOpacity>
                     </View>
 
                 </View>
-
-                {/* ── Divider Row (notches + dashes) ── */}
-                <View style={styles.dividerRow}>
-                    {/* Left notch — sits outside the card border */}
-                    <View style={[styles.notch, styles.notchLeft]} />
-
-                    {/* Dashed line */}
-                    {/* <DashedLine /> */}
-                    <View className='w-full border-t border-dashed border-[#F2AC6D]' />
-
-                    {/* Right notch */}
-                    <View style={[styles.notch, styles.notchRight]} />
-                </View>
-
-                {/* ── Bottom Section: Actions ── */}
-                <View style={styles.bottomSection}>
-                    <TouchableOpacity
-                        style={styles.actionButton}
-                        onPress={onBookAgain}
-                        activeOpacity={0.6}
-                    >
-                        <Text style={styles.actionText}>Book Again</Text>
-                    </TouchableOpacity>
-
-                    <View style={styles.verticalSep} />
-
-                    <TouchableOpacity
-                        style={styles.actionButton}
-                        onPress={onViewDetails}
-                        activeOpacity={0.6}
-                    >
-                        <Text style={styles.actionText}>View Details</Text>
-                    </TouchableOpacity>
-                </View>
-
             </View>
-            <View className='w-[4%] bg-white z-50'></View>
-        </View>
-    );
-};
 
-/** Pure RN dashed line — no SVG */
-const DashedLine: React.FC = () => {
-    const DASH_W = 5;
-    const GAP = 4;
-    const NUM_DASHES = 58; // adjust to fill width
-
-    return (
-        <View style={styles.dashedLineContainer}>
-            {Array.from({ length: NUM_DASHES }).map((_, i) => (
-                <View
-                    key={i}
-                    style={{
-                        width: DASH_W,
-                        height: 1.5,
-                        backgroundColor: BORDER_COLOR,
-                        marginRight: GAP,
-                    }}
-                />
-            ))}
+            <View className='w-[4%] bg-white z-50' />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    card: {
+    /* Wrapper positions the shadow layer behind the real card */
+    cardWrapper: {
         width: '92%',
+        position: 'relative',
+    },
+
+    /* Android shadow-only layer. No children = nothing for Android to clip. */
+    cardShadow: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        borderRadius: 16,
+        backgroundColor: BACKGROUND,
+        elevation: 3,
+    },
+
+    card: {
+        width: '100%',
         backgroundColor: BACKGROUND,
         borderRadius: 16,
         borderWidth: 1,
         borderColor: BORDER_COLOR,
-        // Drop shadow
+        // iOS shadow (Android ignores these, so no conflict with cardShadow above)
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
-        elevation: 3,
-        overflow: 'visible', // required so notches render outside bounds
+        overflow: 'visible', // now actually respected on Android since no elevation here
     },
 
-    /* ── Top section ── */
     topSection: {
         paddingHorizontal: 16,
         paddingTop: 16,
@@ -161,7 +153,6 @@ const styles = StyleSheet.create({
         gap: 14,
     },
 
-    /* ── Divider ── */
     dividerRow: {
         height: NOTCH_SIZE,
         flexDirection: 'row',
@@ -172,7 +163,7 @@ const styles = StyleSheet.create({
         width: NOTCH_SIZE,
         height: NOTCH_SIZE,
         borderRadius: NOTCH_SIZE / 2,
-        backgroundColor: '#F5F5F5', // match your screen/parent background
+        backgroundColor: '#fff',
         borderWidth: 1,
         borderColor: BORDER_COLOR,
         position: 'absolute',
@@ -184,15 +175,14 @@ const styles = StyleSheet.create({
     notchRight: {
         right: -(NOTCH_SIZE / 2),
     },
-    dashedLineContainer: {
+    dashedLine: {
         flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: NOTCH_SIZE / 2,
-        overflow: 'hidden',
+        borderTopWidth: 1,
+        borderStyle: 'dashed',
+        borderColor: BORDER_COLOR,
+        marginHorizontal: NOTCH_SIZE / 2,
     },
 
-    /* ── Bottom section ── */
     bottomSection: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -208,7 +198,7 @@ const styles = StyleSheet.create({
     },
     actionText: {
         color: '#1E60D4',
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: '700',
         letterSpacing: 0.2,
         fontFamily: 'app-regular',
@@ -219,7 +209,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#dadada',
     },
 
-    /* ── Shared row / text styles ── */
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -227,48 +216,47 @@ const styles = StyleSheet.create({
     },
     badge: {
         backgroundColor: '#E9DAEF',
-        borderRadius: 20,
-        paddingHorizontal: 12,
-        paddingVertical: 4,
+        borderRadius: 6,
+        paddingHorizontal: 8,
+        paddingVertical: 3,
     },
     badgeText: {
         color: '#7B4FA0',
         fontSize: 11,
-        fontWeight: '700',
-        letterSpacing: 0.8,
+        fontWeight: '500',
+        // letterSpacing: 0.8,
         textTransform: 'uppercase',
         fontFamily: 'app-regular',
     },
     utsLabel: {
-        color: '#A8A7AD',
-        fontSize: 12,
-        fontWeight: '600',
+        color: 'gray',
+        fontSize: 11,
+        fontWeight: '900',
         fontFamily: 'app-regular',
     },
     utsValue: {
         color: '#1a1a1a',
         fontSize: 12,
-        fontWeight: '500',
-        fontFamily: 'app-regular',
+        fontWeight: '900',
+        fontFamily: 'app-semi-bold',
     },
     fieldLabel: {
-        color: '#A8A7AD',
-        fontSize: 9,
+        color: '#a5a2a2d4',
+        fontSize: 11,
         fontWeight: '700',
-        letterSpacing: 1,
-        textTransform: 'uppercase',
         marginBottom: 3,
         fontFamily: 'app-regular',
     },
     fieldValue: {
-        color: '#1a1a1a',
-        fontSize: 14,
-        fontWeight: '700',
+        color: '#1a1a1ae8',
+        fontSize: 12,
+        fontWeight: '500',
+        letterSpacing: 1,
         fontFamily: 'app-regular',
     },
     stationText: {
-        color: '#1a1a1a',
-        fontSize: 13,
+        color: '#424141d8',
+        fontSize: 12,
         fontWeight: '700',
         flex: 1,
         fontFamily: 'app-regular',
@@ -281,4 +269,3 @@ const styles = StyleSheet.create({
         fontFamily: 'app-regular',
     },
 });
-

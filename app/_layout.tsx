@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from "expo-router";
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from "react";
-import { StatusBar } from "react-native";
+
 
 export default function RootLayout() {
 
@@ -22,10 +22,6 @@ export default function RootLayout() {
 
   return (
     <>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#FFFFFF" // Android only
-      />
       <Stack screenOptions={{
         headerShown: false,
         contentStyle: {

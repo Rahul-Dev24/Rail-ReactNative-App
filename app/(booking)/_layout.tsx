@@ -2,7 +2,9 @@
 import { Tabs } from "expo-router";
 
 import { BottomSheet } from "@/components/BottomSheet";
+import { StatusBarBackground } from "@/components/StatusBarBackground";
 import Images from "@/constant/image";
+import { useStatusBar } from "@/hooks/useStatusBar";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from 'react';
@@ -13,18 +15,16 @@ import {
     Text,
     View
 } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TabLayout() {
 
     return (
         <Tabs
             screenOptions={{
-                header: (e) => <HeaderComponent />,
+                header: () => <HeaderComponent />,
                 tabBarStyle: styles.tabBar,
                 tabBarShowLabel: false,
-                tabBarItemStyle: {
-                    flex: 1,
-                },
             }}
         >
             <Tabs.Screen
@@ -76,42 +76,69 @@ export default function TabLayout() {
                 }}
             />
         </Tabs >
-
     );
 
 }
 
 
 function HeaderComponent() {
+    const [sheetOpen, setSheetOpen] = useState(false);
+    useStatusBar({ style: 'light' });
 
     const goBack = () => {
         router.replace("/(tabs)/home");
-    }
-
-    const [sheetOpen, setSheetOpen] = useState(false);
-
+    };
 
     return (
-        <View className="w-full flex-row items-center pr-4 pl-2.5 py-4 justify-between text-white bg-[#0066fe]" >
-            <View className="flex-row items-center gap-4">
-                <FontAwesome6 onPress={goBack} className="p-2 border border-gray-300 rounded-full" name="arrow-left-long" size={13} color="white" />
-                <Text style={{ fontFamily: "app-regular" }} className="text-white text-lg" >My Bookings</Text>
-            </View>
-            <FontAwesome6 onPress={() => setSheetOpen(true)} name="arrow-down-short-wide" size={20} color="white" />
-            <BottomSheet
-                visible={sheetOpen}
-                onClose={() => setSheetOpen(false)}
-                isClose={false}
-                title="Sort & Filters"
-                snapHeight="52%"
-                applyLabel="Apply"
+        <SafeAreaView>
+            <StatusBarBackground color="#0066fe" />
+            <View
+                className="w-full flex-row items-center justify-between bg-[#0066fe] -mb-7 px-4 py-5"
             >
-                <View className="p-4" >
-                    <Text>Sort By</Text>
+                <View className="flex-row items-center gap-4">
+                    <FontAwesome6
+                        onPress={goBack}
+                        name="arrow-left-long"
+                        size={13}
+                        color="white"
+                        style={{
+                            padding: 8,
+                            borderWidth: 1,
+                            borderColor: "#D1D5DB",
+                            borderRadius: 999,
+                        }}
+                    />
+
+                    <Text
+                        style={{ fontFamily: "app-regular" }}
+                        className="text-white text-lg"
+                    >
+                        My Bookings
+                    </Text>
                 </View>
-            </BottomSheet>
-        </View>
-    )
+
+                <FontAwesome6
+                    onPress={() => setSheetOpen(true)}
+                    name="arrow-down-short-wide"
+                    size={20}
+                    color="white"
+                />
+
+                <BottomSheet
+                    visible={sheetOpen}
+                    onClose={() => setSheetOpen(false)}
+                    isClose={false}
+                    title="Sort & Filters"
+                    snapHeight="52%"
+                    applyLabel="Apply"
+                >
+                    <View className="p-4">
+                        <Text>Sort By</Text>
+                    </View>
+                </BottomSheet>
+            </View>
+        </SafeAreaView>
+    );
 }
 
 
@@ -147,8 +174,8 @@ function TabIcon({
             <Image
                 source={Images.ticket}
                 style={{
-                    width: 30,
-                    height: 30,
+                    width: 25,
+                    height: 25,
                     tintColor: focused ? focusColor : "#7E7E87",
                     resizeMode: "contain",
                 }}
@@ -158,6 +185,7 @@ function TabIcon({
                 numberOfLines={1}
                 ellipsizeMode="clip"
                 style={{
+                    ...styles.tabLabel,
                     color: focused ? focusColor : "#7E7E87",
                 }}
             >
@@ -172,12 +200,10 @@ function TabIcon({
 const styles = StyleSheet.create({
     tabBar: {
         backgroundColor: '#E3F5FF',
-        height: Platform.OS === "ios" ? 84 : 78,
-        paddingBottom: Platform.OS === "ios" ? 20 : 8,
+        height: Platform.OS === "ios" ? 84 : 86,
+        paddingBottom: Platform.OS === "ios" ? 20 : 15,
         paddingTop: 10,
         elevation: 0,
-        borderTopWidth: 2,
-        borderTopColor: '#000',
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
         paddingHorizontal: 8,
@@ -188,13 +214,12 @@ const styles = StyleSheet.create({
         fontSize: 10.5,
         fontWeight: "600",
         textAlign: "center",
-        marginTop: 6,
         fontFamily: "app-regular"
     },
 
     tabActive: {
         marginTop: 15,
-        width: "auto",
+        width: 90,
         paddingHorizontal: 12,
         height: 60,
         alignItems: "center",
@@ -205,7 +230,7 @@ const styles = StyleSheet.create({
 
     tabInactive: {
         marginTop: 15,
-        width: "auto",
+        width: 90,
         height: 60,
         paddingHorizontal: 12,
         alignItems: "center",

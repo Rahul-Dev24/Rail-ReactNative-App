@@ -2,6 +2,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, Tabs } from "expo-router";
 
+import { useStatusBar } from "@/hooks/useStatusBar";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React from 'react';
 import {
@@ -12,6 +13,7 @@ import {
 } from 'react-native';
 
 export default function TabLayout() {
+    useStatusBar({ style: 'dark' })
 
     async function logout() {
 

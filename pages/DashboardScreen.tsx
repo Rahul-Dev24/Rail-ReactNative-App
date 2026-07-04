@@ -10,6 +10,8 @@ import React from 'react';
 import {
   Dimensions,
   Image,
+  Linking,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -41,6 +43,34 @@ const COLORS = {
   iconWaved: '#525470',
 };
 
+const DO_YOU_KNOW_DATA = [
+  {
+    id: "1",
+    title: "First ever passenger train was run between Bori Bandar to Thane on April 16, 1853.",
+    image: Images.bridge,
+  },
+  {
+    id: "2",
+    title: "Chenab Railway Bridge in Dharot, Jammu & Kashmir is the Worlds highest Railway Bridge.",
+    image: Images.steamTrain,
+  },
+  {
+    id: "3",
+    title: "Noney Bridge is going to be worlds tallest tailway bridge pier at a height of 141 meters.",
+    image: Images.greenValley,
+  },
+  {
+    id: "4",
+    title: "Shree Siddharoodha Swamiji Railway Station Hubballi is world's longest Railways Platform with length of 1505 meters.",
+    image: Images.station,
+  },
+  {
+    id: "5",
+    title: "99% Electrification is achived in Indian Railways.",
+    image: Images.track,
+  },
+];
+
 export default function HomeScreen() {
   return (
     // <SafeAreaView style={styles.container}>
@@ -60,7 +90,7 @@ export default function HomeScreen() {
           <TouchableOpacity style={styles.plannerCard}>
             <View style={[styles.cardIllustration, { backgroundColor: COLORS.cardReserved }]}>
               <Image source={Images.reserve} style={styles.cardImage}
-                resizeMode="contain" />
+                resizeMode="cover" />
             </View>
             <Text style={styles.plannerCardLabel}>Reserved</Text>
           </TouchableOpacity>
@@ -69,7 +99,7 @@ export default function HomeScreen() {
           <TouchableOpacity style={styles.plannerCard}>
             <View style={[styles.cardIllustration, { backgroundColor: COLORS.cardUnreserved }]}>
               <Image source={Images.unseserve} style={styles.cardImage}
-                resizeMode="contain" />
+                resizeMode="cover" />
             </View>
             <Text style={styles.plannerCardLabel}>Unreserved</Text>
           </TouchableOpacity>
@@ -78,7 +108,7 @@ export default function HomeScreen() {
           <TouchableOpacity style={styles.plannerCard}>
             <View style={[styles.cardIllustration, { backgroundColor: COLORS.cardPlatform }]}>
               <Image source={Images.platform} style={styles.cardImage}
-                resizeMode="contain" />
+                resizeMode="cover" />
             </View>
             <Text style={styles.plannerCardLabel}>Platform</Text>
           </TouchableOpacity>
@@ -168,22 +198,77 @@ export default function HomeScreen() {
       </View>
 
       {/* Section: Upcoming Journey */}
-      <View style={[styles.sectionContainer, { marginBottom: 30 }]}>
-        <Text style={styles.sectionTitle}>Upcoming Journey</Text>
+      <View style={[styles.sectionContainer, { marginBottom: 10 }]}>
+        <Text style={{ ...styles.sectionTitle, marginBottom: -8 }}>Upcoming Journey</Text>
         <TicketLayout />
       </View>
 
       <View style={[styles.sectionContainer, { marginBottom: 30 }]}>
-        <Text style={{ ...styles.sectionTitle, marginBottom: -40 }}>Follow Us On Social Media Platforms</Text>
-        <View className="flex-1 justify-center items-center relative" >
+        <Text style={{ ...styles.sectionTitle }}>Do You Know?</Text>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
+        >
+          {DO_YOU_KNOW_DATA?.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              activeOpacity={0.9}
+              className="mr-4 overflow-hidden w-42"
+              style={{
+                elevation: 4,
+              }}
+            >
+              <Image
+                source={item.image}
+                className="w-full h-35 rounded-xl"
+                resizeMode="cover"
+              />
+
+              <View className="pt-1">
+                <Text
+                  // numberOfLines={2}
+                  className="text-[12px] text-slate-500 font-[app-regular]"
+                >
+                  {item.title}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+
+      </View>
+
+
+      <View style={[styles.sectionContainer, { marginBottom: 30 }]}>
+        <Text style={{ ...styles.sectionTitle }} className='z-50'>Follow Us On Social Media Platforms</Text>
+        <View className="flex justify-center items-center -mt-10 h-fit relative w-[100%]" >
           <Image source={Images.SocialMedia} style={{
             width: "95%",
-            height: 300,
+            height: 250,
             opacity: 0.88, // Adjust opacity (0 to 1)
           }} resizeMode="contain" />
-          <View className="flex-row justify-center items-center gap-6 absolute" >
-            <FontAwesome6 name="x-twitter" className="p-1 bg-black rounded-full" size={22} color="white" />
-            <FontAwesome5 name="facebook" size={32} color="#0066fe" />
+          <View className="flex-row  justify-center items-center gap-6 absolute" >
+            <FontAwesome6 onPress={() => Linking.openURL("https://x.com/railminindia?lang=en")} name="x-twitter" className="p-1 bg-black rounded-full" size={22} color="white" />
+            <View
+              style={{
+                width: 35,
+                height: 35,
+                borderRadius: 22,
+                backgroundColor: "#1877F2",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <FontAwesome5
+                onPress={() => Linking.openURL("https://www.facebook.com/@RailMinIndia/?hr=1&wtsid=rdr_0kRVEH9RPrDG6gyrN")}
+                name="facebook-f"
+                size={22}
+                color="#FFFFFF"
+              />
+            </View>
             <LinearGradient
               colors={["#833ab4", "#fd1d1d", "#fcb045"]}
               start={{ x: 0, y: 0 }}
@@ -197,12 +282,15 @@ export default function HomeScreen() {
               }}
             >
               <FontAwesome6
+                onPress={() => Linking.openURL("https://www.instagram.com/railminindia?igsh=MXhwaGxmdnp5b3Ex")}
                 name="instagram"
                 size={24}
                 color="white"
               />
             </LinearGradient>
-            <Entypo name="youtube" size={35} color="red" />
+            <Entypo
+              onPress={() => Linking.openURL("https://www.youtube.com/@ministryofrailwaysindia")}
+              name="youtube" size={35} color="red" />
           </View>
         </View>
       </View>
@@ -252,7 +340,7 @@ const styles = StyleSheet.create({
   },
   cardIllustration: {
     width: '100%',
-    height: 90,
+    height: 85,
     borderRadius: 16,
     overflow: 'hidden',
     justifyContent: 'center',
