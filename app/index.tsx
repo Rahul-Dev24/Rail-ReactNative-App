@@ -28,7 +28,7 @@ export default function Index() {
       if (user.isLoggedIn) {
 
         router.replace("/(auth)/lock");
-        // router.replace('/(tabs)/you')
+        // router.replace('/view-ticket')
 
       } else {
 

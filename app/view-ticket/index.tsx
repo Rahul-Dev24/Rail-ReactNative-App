@@ -1,9 +1,12 @@
+import { AnimatedTimerText } from "@/components/AnimatedDigit";
+import { StatusBarBackground } from "@/components/StatusBarBackground";
+import { useStatusBar } from "@/hooks/useStatusBar";
 import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { usePreventScreenCapture } from "expo-screen-capture";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 
 const NOTCH_SIZE = 25;
 const BORDER_COLOR = '#F2AC6D';
@@ -11,6 +14,9 @@ const BACKGROUND = '#F6F6F6';
 const TOTAL_TIME = 5 * 60; // 5 minutes
 
 export default function Index() {
+    usePreventScreenCapture();
+    useStatusBar({ style: 'light' });
+
     const [sheetOpen, setSheetOpen] = useState(false);
 
     const goBack = () => {
@@ -20,6 +26,7 @@ export default function Index() {
 
     return (
         <SafeAreaView>
+            <StatusBarBackground color="#0066fe" />
             <View className="w-full flex-row items-center pr-4 pl-2.5 py-4 justify-between text-white bg-[#0066fe]" >
                 <View className="flex-row items-center gap-5">
                     <FontAwesome6 onPress={goBack} className="p-2 border border-gray-300 rounded-full" name="arrow-left-long" size={18} color="white" />
@@ -34,18 +41,18 @@ export default function Index() {
                 // className="flex-1"
                 showsVerticalScrollIndicator={true}
                 contentContainerStyle={{
-                    backgroundColor: "gray",
+                    backgroundColor: "#dadadacc",
                     paddingBottom: 20,
                 }}
             >
                 <View className="p-4 bg-white" >
-                    <Text style={{ fontFamily: "app-regular" }} className="text-gray-500 text-md" >Thank You Rahul Singh, Happy Journey</Text>
+                    <Text style={{ fontFamily: "app-regular" }} className="text-gray-500 text-[0.9rem]" >Thank You Rahul Singh, Happy Journey</Text>
                 </View>
 
 
 
                 <View className='flex flex-row w-full mt-5'>
-                    <View className='w-[4%] bg-gray-500 z-50'></View>
+                    <View className='w-[4%] bg-[#dadadacc] z-50'></View>
                     <View style={styles.card}>
 
                         <TimerSection />
@@ -151,7 +158,7 @@ export default function Index() {
                         </View>
 
                     </View>
-                    <View className='w-[4%] bg-gray-500 z-50'></View>
+                    <View className='w-[4%] bg-[#dadadacc] z-50'></View>
                 </View>
                 <View className="m-3 flex items-center justify-center p-2 bg-red-200 rounded-2xl">
                     <Text className="text-[red] font-[app-regular] text-sm -mb-0.5">Note: This ticket is non refundable. Ticket is stored</Text>
@@ -244,8 +251,8 @@ function TimerSection() {
                     flexDirection: "row",
                     alignItems: "center",
                     width: "100%",
-                    height: 170,
-                    backgroundColor: "#3F3F46",
+                    height: 190,
+                    backgroundColor: "#252529",
                     overflow: "hidden",
                 }}
             >
@@ -260,19 +267,19 @@ function TimerSection() {
                     <View
                         style={{
                             transform: [{ rotate: "-90deg" }],
-                            width: 170,
+                            width: 190,
                             alignItems: "center",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#fff",
+                            borderBottomWidth: 1.2,
+                            borderBottomColor: "#dadada",
                             borderStyle: "dashed",
                             paddingBottom: 6
                         }}
                     >
                         <Text
                             style={{
-                                color: "#fff",
-                                fontSize: 12,
-                                fontWeight: "600",
+                                color: "#dadada",
+                                fontSize: 14,
+                                fontWeight: "900",
                                 fontFamily: "app-regular",
                                 textAlign: "center",
                             }}
@@ -290,19 +297,22 @@ function TimerSection() {
                         alignItems: "center",
                     }}
                 >
-                    <Text className="text-lg font-[app-regular] text-center text-[#fff]">
+                    <Text className="text-lg font-[app-bold] text-center text-[#fff]">
                         Dynamic Preview will closed in
                     </Text>
 
-                    <Text className="text-2xl font-[app-bold] font-extrabold text-center text-[red]">
+                    {/* <Text className="text-5xl font-[app-bold] font-extrabold text-center py-2 text-[red]">
                         {String(minutes).padStart(2, "0")}:
                         {String(seconds).padStart(2, "0")}
-                    </Text>
+                    </Text> */}
+                    <AnimatedTimerText minutes={minutes} seconds={seconds} />
 
-                    <Text className="text-md font-[app-regular] text-center text-[gray]">
+
+
+                    <Text className="text-[0.8rem] font-[app-bold] text-center text-[gray]">
                         Ticket Booking Date & Time
                     </Text>
-                    <Text className="text-2xl font-[app-regular] text-center text-[#898922]">
+                    <Text className="text-2xl font-[app-bold] text-center text-[#FFA500]">
                         04 Jun 2023, 10:00
                     </Text>
                     <Text className="text-md font-[app-regular] text-center text-[#fff]">
@@ -324,20 +334,20 @@ function TimerSection() {
                     <View
                         style={{
                             transform: [{ rotate: "-90deg" }],
-                            width: 170,
+                            width: 190,
                             alignItems: "center",
-                            borderTopWidth: 1,
+                            borderTopWidth: 1.2,
                             borderTopColor: "#fff",
                             borderStyle: "dashed",
-                            paddingTop: 6
+                            paddingTop: 4
                         }}
                     >
                         <Text
                             style={{
-                                color: "#fff",
-                                fontSize: 12,
-                                fontWeight: "600",
-                                fontFamily: "app-regular",
+                                color: "#dadada",
+                                fontSize: 16,
+                                fontWeight: "900",
+                                fontFamily: "app-bold",
                                 textAlign: "center",
                             }}
                         >
@@ -347,9 +357,9 @@ function TimerSection() {
                 </View>
             </View>
             {/* Progress Bar */}
-            <View className="w-full h-1 overflow-hidden bg-gray-600">
+            <View className="w-full h-1 overflow-hidden bg-[#dadada]">
                 <View
-                    className="h-full bg-[#0066FE] rounded-full"
+                    className="h-full bg-[#4fbee6] rounded-full"
                     style={{
                         width: `${progress * 100}%`,
                     }}
@@ -365,9 +375,9 @@ const styles = StyleSheet.create({
         width: '92%',
         backgroundColor: BACKGROUND,
         borderRadius: 16,
-        borderBottomWidth: 14,
-        borderTopWidth: 14,
-        borderColor: 'red',
+        borderBottomWidth: 18,
+        borderTopWidth: 18,
+        borderColor: '#4fbee6',
 
         // Drop shadow
         shadowColor: '#000',
@@ -397,7 +407,7 @@ const styles = StyleSheet.create({
         width: NOTCH_SIZE,
         height: NOTCH_SIZE,
         borderRadius: NOTCH_SIZE / 2,
-        backgroundColor: 'gray', // match your screen/parent background
+        backgroundColor: '#dadadacc', // match your screen/parent background
         borderWidth: 1,
         borderColor: BORDER_COLOR,
         position: 'absolute',
@@ -465,16 +475,14 @@ const styles = StyleSheet.create({
         fontFamily: 'app-regular',
     },
     utsLabel: {
-        color: '#A8A7AD',
-        fontSize: 12,
-        fontWeight: '600',
-        fontFamily: 'app-regular',
+        color: '#000',
+        fontSize: 14,
+        fontFamily: 'app-semi-bold',
     },
     utsValue: {
-        color: '#1a1a1a',
-        fontSize: 12,
-        fontWeight: '500',
-        fontFamily: 'app-regular',
+        color: '#000',
+        fontSize: 15,
+        fontFamily: 'app-semi-bold',
     },
     fieldLabel: {
         color: '#A8A7AD',
@@ -483,7 +491,7 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
         textTransform: 'uppercase',
         marginBottom: 3,
-        fontFamily: 'app-regular',
+        fontFamily: 'app-semi-bold',
     },
     fieldValue: {
         color: '#1a1a1a',
@@ -492,11 +500,12 @@ const styles = StyleSheet.create({
         fontFamily: 'app-regular',
     },
     stationText: {
-        color: '#1a1a1a',
-        fontSize: 13,
-        fontWeight: '700',
+        color: '#000',
+        fontSize: 14,
+        fontWeight: '600',
         flex: 1,
-        fontFamily: 'app-regular',
+        textTransform: 'uppercase',
+        fontFamily: 'app-semi-bold',
     },
     distanceText: {
         color: '#A8A7AD',

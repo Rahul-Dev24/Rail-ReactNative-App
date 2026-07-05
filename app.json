@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "RailOne_App",
+    "name": "RailOne",
     "slug": "RailOne_App",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -37,6 +37,12 @@
           "dark": {
             "backgroundColor": "#000000"
           }
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow RailOne to use Face ID."
         }
       ]
     ],

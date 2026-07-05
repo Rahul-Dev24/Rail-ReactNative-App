@@ -229,7 +229,7 @@ export default function HomeScreen() {
               <View className="pt-1">
                 <Text
                   // numberOfLines={2}
-                  className="text-[12px] text-slate-500 font-[app-regular]"
+                  className="text-[11px] text-slate-500 font-[app-regular]"
                 >
                   {item.title}
                 </Text>
@@ -353,9 +353,9 @@ const styles = StyleSheet.create({
   },
   plannerCardLabel: {
     marginTop: 8,
-    fontSize: 14,
-    fontWeight: '500',
-    color: COLORS.textMuted,
+    fontSize: 13,
+    fontWeight: '600',
+    color: COLORS.textDark,
     fontFamily: "app-regular"
   },
   gridContainer: {

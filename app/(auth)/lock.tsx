@@ -1,9 +1,11 @@
 import Switch from '@/components/inputs/Switch';
 import RailOneLogo from '@/components/RailOneLogo';
+import { authenticate, checkBiometric } from '@/hooks/useBiometric';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Keyboard,
     KeyboardAvoidingView,
@@ -20,45 +22,48 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PIN_LENGTH = 6;
+const BIOMETRIC_PREF_KEY = 'railone_biometric_enabled';
 
-// Baseline device used when the original spacing values (pt-18, mb-20, etc.)
-// were designed against — a standard ~6.1" phone.
 const BASELINE_WIDTH = 390;
 const BASELINE_HEIGHT = 844;
+
+type BiometricStatus = {
+    supported: boolean;
+    reason?: string;
+    faceId?: boolean;
+    fingerprint?: boolean;
+    iris?: boolean;
+};
 
 export default function LoginMpinScreen() {
     const [pin, setPin] = useState<string[]>(Array(PIN_LENGTH).fill(''));
     const [enabled, setEnabled] = useState(false);
+    const [bioStatus, setBioStatus] = useState<BiometricStatus | null>(null);
+    const [bioError, setBioError] = useState<string | null>(null);
+    const [checkingBio, setCheckingBio] = useState(false);
     const inputRefs = useRef<Array<TextInput | null>>([]);
+    const hasAutoPrompted = useRef(false);
 
     const { width, height } = useWindowDimensions();
-
-    // Scale factor relative to baseline, clamped so tiny phones don't
-    // shrink to nothing and tablets don't blow up the spacing absurdly.
     const heightScale = height / BASELINE_HEIGHT;
     const widthScale = width / BASELINE_WIDTH;
     const scaleFactor = Math.min(Math.max(heightScale, 0.78), 1.35);
     const hScaleFactor = Math.min(Math.max(widthScale, 0.8), 1.5);
-
-    // scale() = vertical spacing/fonts, hscale() = horizontal spacing
     const scale = (size: number) => Math.round(size * scaleFactor);
     const hscale = (size: number) => Math.round(size * hScaleFactor);
 
-    // Tailwind's spacing unit is 4px, so pt-18 = 72px, mt-18 = 72px,
-    // mb-15 = 60px, mb-20 = 80px, etc. Reproducing those exact original
-    // values here, just scaled to the current device.
     const spacing = {
-        contentPaddingTop: scale(20),   // pt-18
-        titleMarginTop: scale(65),      // mt-18
-        titleMarginBottom: scale(32),   // mb-8
-        welcomeMarginBottom: scale(28), // mb-8
-        instructionMarginBottom: scale(16), // mb-4
-        pinMarginBottom: scale(14),     // mb-6
-        linksMarginBottom: scale(62),   // mb-20
-        dividerMarginBottom: scale(56), // mb-15
-        biometricRowMarginBottom: scale(40), // mb-10
-        noteMarginBottom: scale(16),    // mb-4
-        horizontalPadding: hscale(24),  // px-6
+        contentPaddingTop: scale(20),
+        titleMarginTop: scale(65),
+        titleMarginBottom: scale(32),
+        welcomeMarginBottom: scale(28),
+        instructionMarginBottom: scale(16),
+        pinMarginBottom: scale(14),
+        linksMarginBottom: scale(62),
+        dividerMarginBottom: scale(56),
+        biometricRowMarginBottom: scale(40),
+        noteMarginBottom: scale(16),
+        horizontalPadding: hscale(24),
         pinGap: hscale(8),
     };
 
@@ -69,9 +74,86 @@ export default function LoginMpinScreen() {
     const bodyFontSize = scale(13);
     const smallFontSize = scale(14);
 
+    // ── Biometric setup ──────────────────────────────────────────────
+    // Runs once on mount: checks hardware/enrollment, loads the user's
+    // saved preference, and — if they'd previously opted in — auto-fires
+    // the native prompt so it appears as the app opens.
+    useEffect(() => {
+        let isMounted = true;
+
+        (async () => {
+            const status = await checkBiometric();
+            if (!isMounted) return;
+            setBioStatus(status);
+
+            const savedPref = await AsyncStorage.getItem(BIOMETRIC_PREF_KEY);
+            const userOptedIn = savedPref === 'true';
+            if (!isMounted) return;
+            setEnabled(userOptedIn);
+
+            if (userOptedIn && status.supported && !hasAutoPrompted.current) {
+                hasAutoPrompted.current = true;
+                // Small delay so the screen has actually painted before
+                // the native biometric sheet covers it — feels less jarring
+                // than a prompt firing mid-transition.
+                setTimeout(() => {
+                    if (isMounted) runBiometricAuth();
+                }, 400);
+            }
+        })();
+
+        return () => {
+            isMounted = false;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const runBiometricAuth = async () => {
+        setBioError(null);
+        setCheckingBio(true);
+        try {
+            const result = await authenticate();
+            if (result.success) {
+                router.replace('/(tabs)/home');
+            } else if (result.error && result.error !== 'user_cancel' && result.error !== 'system_cancel') {
+                setBioError('Biometric authentication failed. Please use your mPIN.');
+            }
+            // user_cancel / system_cancel: stay silent, they'll just type the PIN
+        } finally {
+            setCheckingBio(false);
+        }
+    };
+
+    // Toggle handler — verifies biometrics actually work before persisting
+    // "on", so you never save a broken enabled state.
+    const handleToggleBiometric = async (value: boolean) => {
+        if (!value) {
+            setEnabled(false);
+            await AsyncStorage.setItem(BIOMETRIC_PREF_KEY, 'false');
+            return;
+        }
+
+        if (!bioStatus?.supported) {
+            setBioError(
+                bioStatus?.reason === 'No biometric enrolled'
+                    ? 'No fingerprint or face is set up on this device yet. Add one in your device settings first.'
+                    : 'This device does not support biometric authentication.',
+            );
+            return;
+        }
+
+        const result = await authenticate();
+        if (result.success) {
+            setEnabled(true);
+            setBioError(null);
+            await AsyncStorage.setItem(BIOMETRIC_PREF_KEY, 'true');
+        } else {
+            setBioError('Could not verify your biometric. Toggle stayed off.');
+        }
+    };
+
     const handleChange = (text: string, index: number) => {
         const digit = text.replace(/[^0-9]/g, '').slice(-1);
-
         const newPin = [...pin];
         newPin[index] = digit;
         setPin(newPin);
@@ -105,7 +187,6 @@ export default function LoginMpinScreen() {
                 setPin(newPin);
                 return;
             }
-
             if (index > 0) {
                 const newPin = [...pin];
                 newPin[index - 1] = '';
@@ -115,19 +196,16 @@ export default function LoginMpinScreen() {
         }
     };
 
-    const handleLogin = () => {
-        const mpin = pin.join('');
-        if (mpin.length !== PIN_LENGTH) {
-            console.warn('Enter all 6 digits of your mPIN');
+    // Manual tap on the face/fingerprint icons — same underlying call;
+    // expo-local-authentication doesn't let you force "only face" or
+    // "only fingerprint" specifically, the OS decides which UI to show
+    // based on what's enrolled. Both icons trigger the same authenticate().
+    const handleBiometric = (_type: 'face' | 'fingerprint') => {
+        if (!bioStatus?.supported) {
+            setBioError('Biometric authentication is not available on this device.');
             return;
         }
-        console.log('Logging in with mPIN:', mpin);
-        // TODO: wire up your auth logic here
-    };
-
-    const handleBiometric = (type: 'face' | 'fingerprint') => {
-        console.log('Biometric login requested:', type);
-        // TODO: wire up expo-local-authentication here
+        runBiometricAuth();
     };
 
     return (
@@ -149,10 +227,8 @@ export default function LoginMpinScreen() {
                                 paddingTop: spacing.contentPaddingTop,
                             }}
                         >
-                            {/* Logo */}
                             <RailOneLogo />
 
-                            {/* Title */}
                             <Text
                                 style={{
                                     fontFamily: 'app-regular',
@@ -167,7 +243,6 @@ export default function LoginMpinScreen() {
                                 Login using mPIN
                             </Text>
 
-                            {/* Welcome */}
                             <Text
                                 style={{
                                     fontFamily: 'app-regular',
@@ -180,7 +255,6 @@ export default function LoginMpinScreen() {
                                 Welcome Rahul Singh!
                             </Text>
 
-                            {/* Instruction */}
                             <Text
                                 style={{
                                     fontFamily: 'app-regular',
@@ -193,7 +267,6 @@ export default function LoginMpinScreen() {
                                 Enter mPIN below
                             </Text>
 
-                            {/* PIN inputs */}
                             <View
                                 style={{
                                     flexDirection: 'row',
@@ -230,7 +303,32 @@ export default function LoginMpinScreen() {
                                 ))}
                             </View>
 
-                            {/* Links row */}
+                            {/* Inline biometric error/status — no Alert popups */}
+                            {bioError && (
+                                <Text
+                                    style={{
+                                        color: '#DC2626',
+                                        fontSize: smallFontSize,
+                                        textAlign: 'center',
+                                        marginBottom: spacing.instructionMarginBottom,
+                                    }}
+                                >
+                                    {bioError}
+                                </Text>
+                            )}
+                            {checkingBio && (
+                                <Text
+                                    style={{
+                                        color: '#64748b',
+                                        fontSize: smallFontSize,
+                                        textAlign: 'center',
+                                        marginBottom: spacing.instructionMarginBottom,
+                                    }}
+                                >
+                                    Verifying biometric…
+                                </Text>
+                            )}
+
                             <View
                                 style={{
                                     flexDirection: 'row',
@@ -250,7 +348,6 @@ export default function LoginMpinScreen() {
                                 </TouchableOpacity>
                             </View>
 
-                            {/* Divider */}
                             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: spacing.dividerMarginBottom }}>
                                 <View style={{ flex: 1, borderTopWidth: 1, borderStyle: 'dashed', borderColor: '#cbd5e1' }} />
                                 <Text style={{ marginHorizontal: 12, color: '#94a3b8', fontFamily: 'app-regular', fontSize: bodyFontSize, fontWeight: '600' }}>
@@ -259,18 +356,19 @@ export default function LoginMpinScreen() {
                                 <View style={{ flex: 1, borderTopWidth: 1, borderStyle: 'dashed', borderColor: '#cbd5e1' }} />
                             </View>
 
-                            {/* Biometric row + Login button */}
                             <View
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
                                     justifyContent: 'space-between',
                                     marginBottom: spacing.biometricRowMarginBottom,
+                                    opacity: bioStatus?.supported ? 1 : 0.4,
                                 }}
                             >
                                 <View style={{ flexDirection: 'row' }}>
                                     <TouchableOpacity
                                         onPress={() => handleBiometric('face')}
+                                        disabled={!bioStatus?.supported}
                                         style={{ marginRight: hscale(24) }}
                                         accessibilityLabel="Login with Face ID"
                                     >
@@ -278,13 +376,14 @@ export default function LoginMpinScreen() {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => handleBiometric('fingerprint')}
+                                        disabled={!bioStatus?.supported}
                                         accessibilityLabel="Login with fingerprint"
                                     >
                                         <MaterialCommunityIcons name="fingerprint" size={scale(38)} color="#475569" />
                                     </TouchableOpacity>
                                 </View>
 
-                                <Switch value={enabled} onValueChange={setEnabled} />
+                                <Switch value={enabled} onValueChange={handleToggleBiometric} />
                             </View>
 
                             <View style={{ marginBottom: spacing.noteMarginBottom }}>
@@ -296,7 +395,6 @@ export default function LoginMpinScreen() {
                                 </Text>
                             </View>
 
-                            {/* Different user */}
                             <TouchableOpacity style={{ alignItems: 'center', paddingBottom: scale(16) }}>
                                 <Text style={{ fontSize: welcomeFontSize, fontWeight: '800', color: '#1e1b4b' }}>
                                     Different User?
