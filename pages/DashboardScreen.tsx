@@ -6,6 +6,7 @@ import {
   FontAwesome6
 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import React from 'react';
 import {
   Dimensions,
@@ -96,7 +97,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
 
           {/* Unreserved Card */}
-          <TouchableOpacity style={styles.plannerCard}>
+          <TouchableOpacity style={styles.plannerCard} onPress={() => { router.replace('/(un-reserved-booking)/firstPage') }} >
             <View style={[styles.cardIllustration, { backgroundColor: COLORS.cardUnreserved }]}>
               <Image source={Images.unseserve} style={styles.cardImage}
                 resizeMode="cover" />

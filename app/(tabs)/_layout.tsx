@@ -2,6 +2,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, Tabs } from "expo-router";
 
+import SidebarDrawer from "@/components/SidebarDrawer";
+import { SidebarProvider, useSidebar } from "@/hooks/sidebarcontext";
 import { useStatusBar } from "@/hooks/useStatusBar";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React from 'react';
@@ -11,6 +13,7 @@ import {
     Text,
     View
 } from 'react-native';
+
 
 export default function TabLayout() {
     useStatusBar({ style: 'dark' })
@@ -22,100 +25,123 @@ export default function TabLayout() {
         router.replace("/(auth)/login");
 
     }
+    return (
+        <SidebarProvider>
+            <TabsLayout />
+        </SidebarProvider>
+    );
+}
+
+
+function TabsLayout() {
+    const { visible, openSidebar, closeSidebar } = useSidebar();
 
     return (
-
-        // <View>
-
-        //     <Button title="Logout" onPress={logout} />
-
-        // </View>
-
-        <Tabs
-            screenOptions={{
-                headerShown: false,
-                tabBarStyle: styles.tabBar,
-                tabBarShowLabel: false,
-                tabBarItemStyle: {
-                    flex: 1,
-                },
-            }}
-        >
-            <Tabs.Screen
-                name="home"
-                options={{
-                    // header: () => <RailOneHeader />,
-                    tabBarIcon: ({ focused }) => (
-                        <TabIcon
-                            focused={focused}
-                            label="Home"
-                            icon={
-                                <Ionicons
-                                    name={focused ? 'home' : 'home-outline'}
-                                    size={22}
-                                    color={focused ? C.active : C.inactive}
-                                />
-                            }
-                        />
-                    ),
+        <>
+            <Tabs
+                screenOptions={{
+                    headerShown: false,
+                    tabBarStyle: styles.tabBar,
+                    tabBarShowLabel: false,
+                    tabBarItemStyle: {
+                        flex: 1,
+                    },
                 }}
-            />
-            <Tabs.Screen
-                name="tickets"
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <TabIcon
-                            focused={focused}
-                            label="My Bookings"
-                            icon={
-                                <MaterialIcons
-                                    name="confirmation-number"
-                                    size={24}
-                                    color={focused ? C.active : C.inactive}
-                                />
-                            }
-                        />
-                    ),
-                }}
-            />
-            <Tabs.Screen
-                name="you"
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <TabIcon
-                            focused={focused}
-                            label="You"
-                            icon={
-                                <Ionicons
-                                    name={focused ? 'person' : 'person-outline'}
-                                    size={22}
-                                    color={focused ? C.active : C.inactive}
-                                />
-                            }
-                        />
-                    ),
-                }}
-            />
-            <Tabs.Screen
-                name="menu"
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <TabIcon
-                            focused={focused}
-                            label="Menu"
-                            icon={
-                                <Ionicons
-                                    name="menu"
-                                    size={22}
-                                    color={focused ? C.active : C.inactive}
-                                />
-                            }
-                        />
-                    ),
-                }}
-            />
-        </Tabs >
+            >
+                <Tabs.Screen
+                    name="home"
+                    options={{
+                        // header: () => <RailOneHeader />,
+                        tabBarIcon: ({ focused }) => (
+                            <TabIcon
+                                focused={focused}
+                                label="Home"
+                                icon={
+                                    <Ionicons
+                                        name={focused ? 'home' : 'home-outline'}
+                                        size={22}
+                                        color={focused ? C.active : C.inactive}
+                                    />
+                                }
+                            />
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="tickets"
+                    options={{
+                        tabBarIcon: ({ focused }) => (
+                            <TabIcon
+                                focused={focused}
+                                label="My Bookings"
+                                icon={
+                                    <MaterialIcons
+                                        name="confirmation-number"
+                                        size={24}
+                                        color={focused ? C.active : C.inactive}
+                                    />
+                                }
+                            />
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="you"
+                    options={{
+                        tabBarIcon: ({ focused }) => (
+                            <TabIcon
+                                focused={focused}
+                                label="You"
+                                icon={
+                                    <Ionicons
+                                        name={focused ? 'person' : 'person-outline'}
+                                        size={22}
+                                        color={focused ? C.active : C.inactive}
+                                    />
+                                }
+                            />
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="menu"
+                    options={{
+                        tabBarIcon: ({ focused }) => (
+                            <TabIcon
+                                focused={focused}
+                                label="Menu"
+                                icon={
+                                    <Ionicons
+                                        name="menu"
+                                        size={22}
+                                        color={focused ? C.active : C.inactive}
+                                    />
+                                }
+                            />
+                        ),
+                    }}
+                    listeners={() => ({
+                        tabPress: (e) => {
+                            // This tab has no screen of its own — it's just a trigger.
+                            // Stop the default navigation to "menu" entirely.
+                            e.preventDefault();
 
+                            // No matter which tab/screen the user is currently on,
+                            // send them to Home first...
+                            router.navigate('/(tabs)/home');
+
+                            // ...then open the sidebar on top of it.
+                            openSidebar();
+                        },
+                    })}
+                />
+            </Tabs >
+
+            {/* Rendered once, above the Tabs — Modal portals over the full
+          screen (including the tab bar) regardless of which tab is
+          active, so it doesn't matter where this lives in the tree. */}
+            <SidebarDrawer visible={visible} onClose={closeSidebar} />
+        </>
     );
 
 }

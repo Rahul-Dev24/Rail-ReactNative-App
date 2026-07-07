@@ -3,7 +3,6 @@ import { StatusBarBackground } from "@/components/StatusBarBackground";
 import { useStatusBar } from "@/hooks/useStatusBar";
 import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { usePreventScreenCapture } from "expo-screen-capture";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,6 +11,15 @@ const NOTCH_SIZE = 25;
 const BORDER_COLOR = '#F2AC6D';
 const BACKGROUND = '#F6F6F6';
 const TOTAL_TIME = 5 * 60; // 5 minutes
+
+
+// --- Diamond watermark pattern ---
+const DIAMOND_ICON_SIZE = 75;
+const DIAMOND_GAP_X = -30;
+const DIAMOND_GAP_Y = -8;
+const DIAMOND_ROWS = 10;
+const DIAMOND_COLS = 20;
+
 
 export default function Index() {
     usePreventScreenCapture();
@@ -254,8 +262,12 @@ function TimerSection() {
                     height: 190,
                     backgroundColor: "#252529",
                     overflow: "hidden",
+                    position: "relative", // needed so the watermark can sit behind content
                 }}
             >
+                {/* Diamond watermark, sits behind everything below */}
+                <DiamondWatermark />
+
                 {/* Left Vertical Text */}
                 <View
                     style={{
@@ -272,7 +284,7 @@ function TimerSection() {
                             borderBottomWidth: 1.2,
                             borderBottomColor: "#dadada",
                             borderStyle: "dashed",
-                            paddingBottom: 6
+                            paddingBottom: 6,
                         }}
                     >
                         <Text
@@ -301,13 +313,7 @@ function TimerSection() {
                         Dynamic Preview will closed in
                     </Text>
 
-                    {/* <Text className="text-5xl font-[app-bold] font-extrabold text-center py-2 text-[red]">
-                        {String(minutes).padStart(2, "0")}:
-                        {String(seconds).padStart(2, "0")}
-                    </Text> */}
                     <AnimatedTimerText minutes={minutes} seconds={seconds} />
-
-
 
                     <Text className="text-[0.8rem] font-[app-bold] text-center text-[gray]">
                         Ticket Booking Date & Time
@@ -339,7 +345,7 @@ function TimerSection() {
                             borderTopWidth: 1.2,
                             borderTopColor: "#fff",
                             borderStyle: "dashed",
-                            paddingTop: 4
+                            paddingTop: 4,
                         }}
                     >
                         <Text
@@ -356,6 +362,7 @@ function TimerSection() {
                     </View>
                 </View>
             </View>
+
             {/* Progress Bar */}
             <View className="w-full h-1 overflow-hidden bg-[#dadada]">
                 <View
@@ -369,6 +376,49 @@ function TimerSection() {
     )
 }
 
+
+
+function DiamondWatermark() {
+    return (
+        <View
+            pointerEvents="none"
+            style={[
+                StyleSheet.absoluteFillObject,
+                {
+                    opacity: 0.08,
+                    overflow: "hidden",
+                    flexDirection: "column",
+                    marginTop: -10
+                },
+            ]}
+        >
+            {Array.from({ length: DIAMOND_ROWS }).map((_, rowIndex) => (
+                <View
+                    key={`row-${rowIndex}`}
+                    style={{
+                        flexDirection: "row",
+                        marginTop: rowIndex === 0 ? 0 : DIAMOND_GAP_Y,
+                    }}
+                >
+                    {Array.from({ length: DIAMOND_COLS }).map((_, colIndex) => (
+                        <View
+                            key={`diamond-${rowIndex}-${colIndex}`}
+                            style={{
+                                marginLeft: colIndex === 0 ? 0 : DIAMOND_GAP_X,
+                            }}
+                        >
+                            <MaterialCommunityIcons
+                                name="cards-diamond"
+                                size={DIAMOND_ICON_SIZE}
+                                color="#4fbee671"
+                            />
+                        </View>
+                    ))}
+                </View>
+            ))}
+        </View>
+    );
+}
 
 const styles = StyleSheet.create({
     card: {
@@ -515,4 +565,8 @@ const styles = StyleSheet.create({
         fontFamily: 'app-regular',
     },
 });
+
+function usePreventScreenCapture() {
+    throw new Error("Function not implemented.");
+}
 

@@ -1,5 +1,6 @@
 import Switch from '@/components/inputs/Switch';
 import RailOneLogo from '@/components/RailOneLogo';
+import { hideLoader, showLoader } from '@/hooks/loader';
 import { authenticate, checkBiometric } from '@/hooks/useBiometric';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -163,15 +164,18 @@ export default function LoginMpinScreen() {
         }
 
         if (digit && index === PIN_LENGTH - 1) {
+            showLoader();
             Keyboard.dismiss();
             const checkPin = newPin?.join('');
 
             if (checkPin === '111111') {
                 setTimeout(() => {
+                    hideLoader();
                     router.replace('/(tabs)/home');
                 }, 2000);
             } else if (newPin.length === 6) {
                 setPin(Array(PIN_LENGTH).fill(''));
+                hideLoader();
             }
         }
     };

@@ -1,12 +1,6 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Redirect } from 'expo-router';
+import React from 'react';
 
 export default function Menu() {
-    return (
-        <View>
-            <Text>menu</Text>
-        </View>
-    )
+    return <Redirect href="/(tabs)/home" />;
 }
-
-const styles = StyleSheet.create({})

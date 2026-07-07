@@ -1,4 +1,6 @@
+import GlobalLoader from "@/components/GlobalLoader";
 import "@/global.css";
+import { loaderRef } from "@/hooks/loader";
 import { useFonts } from 'expo-font';
 import { Stack } from "expo-router";
 import * as SplashScreen from 'expo-splash-screen';
@@ -21,6 +23,7 @@ export default function RootLayout() {
 
   return (
     <>
+      <GlobalLoader ref={loaderRef} />
       <Stack screenOptions={{
         headerShown: false,
         contentStyle: {
