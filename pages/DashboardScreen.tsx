@@ -245,7 +245,7 @@ export default function HomeScreen() {
 
       <View style={[styles.sectionContainer, { marginBottom: 30 }]}>
         <Text style={{ ...styles.sectionTitle }} className='z-50'>Follow Us On Social Media Platforms</Text>
-        <View className="flex justify-center items-center -mt-10 h-fit relative w-[100%]" >
+        <View className="flex justify-center items-center -mt-10 h-fit relative w-full" >
           <Image source={Images.SocialMedia} style={{
             width: "95%",
             height: 250,
