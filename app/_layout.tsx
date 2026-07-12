@@ -1,6 +1,7 @@
 import AnimatedSplash from "@/components/AnimatedSplash";
 import GlobalLoader from "@/components/GlobalLoader";
 import "@/global.css";
+import { AlertProvider } from "@/hooks/AlertProvider";
 import { loaderRef } from "@/hooks/loader";
 import { useFonts } from 'expo-font';
 import { Stack } from "expo-router";
@@ -30,19 +31,22 @@ export default function RootLayout() {
     <>
       <GlobalLoader ref={loaderRef} />
       <AnimatedSplash appReady={appReady}>
-        <Stack screenOptions={{
-          headerShown: false,
-          contentStyle: {
-            backgroundColor: "#FFFFFF",
-          }
-        }} >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="(auth)" />
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="(booking)" />
-          <Stack.Screen name="un-reserved-booking" />
-          <Stack.Screen name="view-ticket" />
-        </Stack>
+        <AlertProvider>
+          <Stack screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: "#FFFFFF",
+            }
+          }} >
+            <Stack.Screen name="index" />
+            <Stack.Screen name="(auth)" />
+            <Stack.Screen name="(tabs)" />
+            {/* <Stack.Screen name="(booking)" /> */}
+            <Stack.Screen name="un-reserved-booking" />
+            <Stack.Screen name="view-ticket" />
+            <Stack.Screen name="make-payments" />
+          </Stack>
+        </AlertProvider>
       </AnimatedSplash>
 
     </>

@@ -1,5 +1,7 @@
 import TicketLayout from '@/components/TicketLayout';
 import Images from '@/constant/image';
+import { getAddress, getCurrentLocation } from '@/constant/utils';
+import { useAppAlert } from '@/hooks/AlertProvider';
 import {
   Entypo,
   FontAwesome5,
@@ -73,6 +75,36 @@ const DO_YOU_KNOW_DATA = [
 ];
 
 export default function HomeScreen() {
+  const { showAlert } = useAppAlert();
+
+  const unReserveBooking = async () => {
+    const coordinate = await getCurrentLocation();
+    console.log(coordinate);
+    if (coordinate == null) {
+      showAlert({
+        title: "Permission Required",
+        message:
+          "Location services are disabled.\nPlease enable the services.",
+
+        primaryText: "Go to Settings",
+
+        secondaryText: "I will do it later",
+
+        onPrimaryPress: () => {
+          Linking.openSettings();
+        },
+
+        onSecondaryPress: () => {
+          console.log("Later");
+        },
+      });
+    } else if (coordinate?.latitude && coordinate?.longitude) {
+      console.log(await getAddress(coordinate?.latitude, coordinate?.longitude));
+
+      router.push('/un-reserved-booking/firstPage')
+    }
+  }
+
   return (
     <View >
       {/* Welcome Greeting */}
@@ -95,7 +127,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
 
           {/* Unreserved Card */}
-          <TouchableOpacity style={styles.plannerCard} onPress={() => { router.push('/un-reserved-booking/firstPage') }} >
+          <TouchableOpacity style={styles.plannerCard} onPress={unReserveBooking} >
             <View style={[styles.cardIllustration, { backgroundColor: COLORS.cardUnreserved }]}>
               <Image source={Images.unseserve} style={styles.cardImage}
                 resizeMode="cover" />

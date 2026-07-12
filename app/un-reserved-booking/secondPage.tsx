@@ -211,6 +211,7 @@ export default function UnreservedJourneyScreen() {
                         activeOpacity={0.85}
                         className="rounded-full py-4 items-center"
                         style={{ backgroundColor: BRAND_BLUE }}
+                        onPress={() => { router.push("../make-payments") }}
                     >
                         <Text className="text-white text-lg font-bold">Book Now</Text>
                     </TouchableOpacity>

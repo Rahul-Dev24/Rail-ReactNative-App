@@ -34,7 +34,7 @@ export default function TabLayout() {
                         <TabIcon
                             focused={focused}
                             label="Upcoming"
-                            focusColor="#EBBF94"
+                            focusColor="#ea9f55"
                         />
                     ),
                 }}

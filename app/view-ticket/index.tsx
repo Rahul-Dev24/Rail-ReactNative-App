@@ -29,7 +29,7 @@ export default function Index() {
     const [sheetOpen, setSheetOpen] = useState(false);
 
     const goBack = () => {
-        router.push("/(booking)/upcoming");
+        router.push("/(tabs)/booking/upcoming");
     }
 
 
@@ -235,7 +235,7 @@ function TimerSection() {
         }
 
         if (secondsLeft === 0) {
-            router.push("/(booking)/upcoming");
+            router.push("/(tabs)/booking/upcoming");
         }
 
         return () => {

@@ -27,7 +27,7 @@ export const TicketCard: React.FC<TicketCardProps> = ({
     onViewDetails,
 }) => {
     return (
-        <View className='flex flex-row w-full'>
+        <View className='flex flex-row w-full' >
             <View className='w-[4%] bg-white z-50' />
 
             {/* Wrapper holds the shadow layer + the actual card as two separate views */}

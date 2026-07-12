@@ -1,5 +1,5 @@
 export const color = {
-    blue: '#1A47C8',        // tab bar blue
+    blue: '#0066fe',        // tab bar blue
     white: '#FFFFFF',
     inactive: '#A0B0E0',    // inactive tab icon/label
     active: '#FFFFFF',      // active tab icon/label

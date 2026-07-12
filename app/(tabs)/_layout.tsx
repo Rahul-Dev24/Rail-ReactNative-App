@@ -68,8 +68,11 @@ function TabsLayout() {
                     }}
                 />
                 <Tabs.Screen
-                    name="tickets"
+                    name="booking"
                     options={{
+                        tabBarStyle: {
+                            display: "none",
+                        },
                         tabBarIcon: ({ focused }) => (
                             <TabIcon
                                 focused={focused}

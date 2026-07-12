@@ -1,5 +1,6 @@
 
 import { RailOneHeader } from '@/components/RailOneHeader';
+import { useStatusBar } from '@/hooks/useStatusBar';
 import HomeScreen from '@/pages/DashboardScreen';
 import React from 'react';
 import {
@@ -12,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function Home() {
+    useStatusBar({ style: 'dark' })
     return (
         <SafeAreaView style={styles.container} >
             <View style={styles.headerContainer}>
