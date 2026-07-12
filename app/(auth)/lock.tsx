@@ -115,7 +115,7 @@ export default function LoginMpinScreen() {
         try {
             const result = await authenticate();
             if (result.success) {
-                router.replace('/(tabs)/home');
+                router.push('/(tabs)/home');
             } else if (result.error && result.error !== 'user_cancel' && result.error !== 'system_cancel') {
                 setBioError('Biometric authentication failed. Please use your mPIN.');
             }
@@ -154,7 +154,7 @@ export default function LoginMpinScreen() {
     };
 
     const handleChange = (text: string, index: number) => {
-        const digit = text.replace(/[^0-9]/g, '').slice(-1);
+        const digit = text.push(/[^0-9]/g, '').slice(-1);
         const newPin = [...pin];
         newPin[index] = digit;
         setPin(newPin);
@@ -171,7 +171,7 @@ export default function LoginMpinScreen() {
             if (checkPin === '111111') {
                 setTimeout(() => {
                     hideLoader();
-                    router.replace('/(tabs)/home');
+                    router.push('/(tabs)/home');
                 }, 2000);
             } else if (newPin.length === 6) {
                 setPin(Array(PIN_LENGTH).fill(''));

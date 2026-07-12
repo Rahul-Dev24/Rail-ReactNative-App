@@ -117,7 +117,7 @@ export default function You() {
             }}>
                 {/* Back button */}
                 <View className="px-6 pt-14">
-                    <TouchableOpacity onPress={() => { router.replace("/(tabs)/home") }}
+                    <TouchableOpacity onPress={() => { router.push("/(tabs)/home") }}
                         className="w-12 h-12 rounded-full border border-sky-300 items-center justify-center"
                         activeOpacity={0.7}
                     >

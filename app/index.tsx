@@ -27,12 +27,12 @@ export default function Index() {
 
       if (user.isLoggedIn) {
 
-        router.replace("/(auth)/lock");
-        // router.replace('/view-ticket')
+        router.push("/(auth)/lock");
+        // router.push('/view-ticket')
 
       } else {
 
-        router.replace("/(auth)/login");
+        router.push("/(auth)/login");
 
       }
 

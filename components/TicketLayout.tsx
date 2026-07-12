@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
     },
     ticketWrapper: {
         width: '100%',

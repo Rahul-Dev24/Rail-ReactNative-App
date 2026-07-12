@@ -19,7 +19,7 @@ export function RailOneHeader() {
                 {/* Left */}
                 <TouchableOpacity style={styles.langBtn}>
                     <View style={styles.langIconWrapper}>
-                        <Image source={Images.langIcon} style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }} />
+                        <Image source={Images.langIcon} style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center' }} />
                     </View>
                 </TouchableOpacity>
 
@@ -35,7 +35,7 @@ export function RailOneHeader() {
             size={22}
             color={C.text}
           /> */}
-                    <Image source={Images.notification} style={{ width: 44, height: 44 }} />
+                    <Image source={Images.notification} style={{ width: 30, height: 30 }} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         boxSizing: 'border-box' as const,
 
-        width: 45,
-        height: 45,
+        width: 40,
+        height: 40,
         borderRadius: '50%',
         borderWidth: 1,
         borderStyle: 'solid',
@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
     },
 
     bellBtn: {
-        width: 46,
-        height: 46,
+        width: 40,
+        height: 40,
         borderRadius: '50%',
         borderWidth: 1,
         borderStyle: 'solid',

@@ -39,7 +39,7 @@ export default function Upcoming() {
                     destinationStation="GUINDY"
                     distance="63 km"
                     onBookAgain={() => console.log("Book Again")}
-                    onViewDetails={() => { router.replace("../view-ticket") }}
+                    onViewDetails={() => { router.push("../view-ticket") }}
                 />
                 <TicketCard
                     ticketType="MONTHLY"

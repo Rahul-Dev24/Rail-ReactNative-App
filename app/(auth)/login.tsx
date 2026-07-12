@@ -10,7 +10,7 @@ export default function Login() {
 
         await AsyncStorage.setItem("token", "12345");
 
-        router.replace("/(auth)/lock");
+        router.push("/(auth)/lock");
 
     }
 

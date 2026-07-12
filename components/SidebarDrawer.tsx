@@ -89,89 +89,88 @@ export default function SidebarDrawer({
     ];
 
     return (
-        <Modal
-            visible={visible}
-            animationType="fade"
-            transparent
-            onRequestClose={onClose}
-        >
-            <View className="flex-1 flex-row">
-                {/* Dimmed backdrop — tap to close */}
-                <Pressable className="flex-[0.22] bg-black/50" onPress={onClose} />
+        <>
+            <Modal
+                visible={visible}
+                animationType="fade"
+                transparent
+                onRequestClose={onClose}
+            >
+                <View className="flex-1 flex-row bg-[#0000004D]">
+                    {/* Dimmed backdrop — tap to close */}
+                    <Pressable className="flex-[0.22] bg-[#0000004D]" onPress={onClose} />
 
-                {/* Sidebar panel */}
-                <View className="flex-[0.78] bg-white">
-                    <ScrollView
-                        className="flex-1"
-                        contentContainerStyle={{ paddingBottom: 24 }}
-                        showsVerticalScrollIndicator={false}
-                    >
-                        {/* Profile block */}
-                        <View className="bg-indigo-50 items-center pt-16 pb-8 px-6 rounded-br-4xl">
-                            <View className="w-24 h-24 rounded-full bg-sky-400 items-center justify-center mb-4">
-                                <Ionicons name="person" size={48} color="#BFDBFE" />
-                            </View>
-                            <Text className="text-2xl font-bold text-slate-900">
-                                {userName}
-                            </Text>
-                        </View>
-
-                        {/* Wallet card */}
-                        <View className="mx-6 -mt-4 mb-4">
-                            <View className="bg-indigo-50 rounded-2xl px-4 py-5 flex-row items-center justify-between">
-                                <View className="flex-row items-center">
-                                    <View className="w-10 h-10 rounded-lg bg-indigo-200 items-center justify-center mr-3">
-                                        <FontAwesome5 name="wallet" size={16} color="#4338CA" />
-                                    </View>
-                                    <View>
-                                        <Text className="text-slate-500 text-base">
-                                            R-Wallet
-                                        </Text>
-                                        <Text className="text-slate-900 text-xl font-bold">
-                                            ₹ {walletBalance}
-                                        </Text>
-                                    </View>
+                    {/* Sidebar panel */}
+                    <View className="flex-[0.78] bg-white rounded-3xl">
+                        <ScrollView
+                            className="flex-1"
+                            contentContainerStyle={{ paddingBottom: 24 }}
+                            showsVerticalScrollIndicator={false}
+                        >
+                            {/* Profile block */}
+                            <View className="bg-indigo-50 items-center pt-16 pb-8 px-6 rounded-b-4xl">
+                                <View className="w-24 h-24 rounded-full bg-sky-400 items-center justify-center mb-4">
+                                    <Ionicons name="person" size={48} color="#BFDBFE" />
                                 </View>
-
-                                <TouchableOpacity
-                                    onPress={onAddMoney}
-                                    className="bg-blue-600 rounded-full px-6 py-3.5"
-                                    activeOpacity={0.8}
-                                >
-                                    <Text className="text-white font-semibold text-base">
-                                        Add Money
-                                    </Text>
-                                </TouchableOpacity>
+                                <Text className="text-2xl font-bold text-slate-900">
+                                    {userName}
+                                </Text>
                             </View>
-                        </View>
 
-                        {/* Menu list */}
-                        <View className="px-6">
-                            {menuRows.map((row) => (
-                                <TouchableOpacity
-                                    key={row.key}
-                                    onPress={row.onPress}
-                                    activeOpacity={0.6}
-                                    className="flex-row items-center py-4"
-                                >
-                                    <View className="w-7 items-center mr-4">{row.icon}</View>
-                                    <Text className="text-lg text-slate-800">{row.label}</Text>
-                                </TouchableOpacity>
-                            ))}
-                        </View>
+                            {/* Wallet card */}
+                            <View className=" mt-4 mb-4 mx-1">
+                                <View className="bg-indigo-50 rounded-full px-4 py-3 flex-row items-center justify-between">
+                                    <View className="flex-row items-center">
+                                        <View className="w-8 h-8 rounded-lg bg-indigo-200 items-center justify-center mr-3">
+                                            <FontAwesome5 name="wallet" size={20} color="#4338CA" />
+                                        </View>
+                                        <View>
+                                            <Text className="text-slate-500 text-[12px] font-[app-semi-bold]">
+                                                R-Wallet
+                                            </Text>
+                                            <Text className="text-slate-900 text-xl font-[app-bold] font-bold">
+                                                ₹ {walletBalance}
+                                            </Text>
+                                        </View>
+                                    </View>
 
-                        {/* Version */}
-                        <Text className="text-center text-slate-400 text-sm mt-6">
-                            {appVersion}
-                        </Text>
-                    </ScrollView>
+                                    <TouchableOpacity
+                                        onPress={onAddMoney}
+                                        className="bg-blue-600 rounded-full px-6 py-3.5"
+                                        activeOpacity={0.8}
+                                    >
+                                        <Text className="text-white font-semibold text-[12px]">
+                                            Add Money
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
 
-                    {/* Bottom drag handle */}
-                    <View className="items-center pb-3 pt-2">
-                        <View className="w-32 h-1.5 rounded-full bg-slate-400" />
+                            {/* Menu list */}
+                            <View className="px-6">
+                                {menuRows.map((row) => (
+                                    <TouchableOpacity
+                                        key={row.key}
+                                        onPress={row.onPress}
+                                        activeOpacity={0.6}
+                                        className="flex-row items-center py-4"
+                                    >
+                                        <View className="w-7 items-center mr-4">{row.icon}</View>
+                                        <Text className="text-lg text-slate-800">{row.label}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+
+                            {/* Version */}
+                            <Text className="text-center text-slate-400 text-sm mt-6">
+                                {appVersion}
+                            </Text>
+                        </ScrollView>
+
                     </View>
                 </View>
-            </View>
-        </Modal>
+            </Modal>
+        </>
+
     );
 }

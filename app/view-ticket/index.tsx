@@ -3,6 +3,7 @@ import { StatusBarBackground } from "@/components/StatusBarBackground";
 import { useStatusBar } from "@/hooks/useStatusBar";
 import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { usePreventScreenCapture } from "expo-screen-capture";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,7 +15,7 @@ const TOTAL_TIME = 5 * 60; // 5 minutes
 
 
 // --- Diamond watermark pattern ---
-const DIAMOND_ICON_SIZE = 75;
+const DIAMOND_ICON_SIZE = 85;
 const DIAMOND_GAP_X = -30;
 const DIAMOND_GAP_Y = -8;
 const DIAMOND_ROWS = 10;
@@ -28,7 +29,7 @@ export default function Index() {
     const [sheetOpen, setSheetOpen] = useState(false);
 
     const goBack = () => {
-        router.replace("/(booking)/upcoming");
+        router.push("/(booking)/upcoming");
     }
 
 
@@ -72,7 +73,7 @@ export default function Index() {
 
                             <View style={styles.row}>
                                 <Text style={styles.utsValue}>Season Ticket</Text>
-                                <Text style={styles.utsLabel}>XA74EDI00C </Text>
+                                <Text style={{ ...styles.utsLabel, fontSize: 14, fontFamily: 'app-bold' }}>XA74EDI00C </Text>
                             </View>
 
                             {/* Row 3: Source — distance — Destination */}
@@ -112,7 +113,7 @@ export default function Index() {
                                 </View>
                             </View>
 
-                            <View className="flex-row items-start gap-1 -mb-2">
+                            <View className="flex-row items-start gap-1 -mb-4">
                                 <Text style={styles.utsLabel}>MONTHLY</Text>
                                 <Text style={styles.utsLabel}>|</Text>
                                 <Text style={styles.utsLabel}>ORDINARY</Text>
@@ -198,6 +199,7 @@ export default function Index() {
                     <Text className="font-[app-regular] text-[gray]">For enquiry and integrated railway helpline</Text>
                     <Text className="font-[app-regular] text-[gray]">please dial 139</Text>
                 </View>
+                <View className="h-20"></View>
             </ScrollView>
         </SafeAreaView>
     )
@@ -233,7 +235,7 @@ function TimerSection() {
         }
 
         if (secondsLeft === 0) {
-            router.replace("/(booking)/upcoming");
+            router.push("/(booking)/upcoming");
         }
 
         return () => {
@@ -260,7 +262,7 @@ function TimerSection() {
                     alignItems: "center",
                     width: "100%",
                     height: 190,
-                    backgroundColor: "#252529",
+                    backgroundColor: "black",
                     overflow: "hidden",
                     position: "relative", // needed so the watermark can sit behind content
                 }}
@@ -289,7 +291,7 @@ function TimerSection() {
                     >
                         <Text
                             style={{
-                                color: "#dadada",
+                                color: "gray",
                                 fontSize: 14,
                                 fontWeight: "900",
                                 fontFamily: "app-regular",
@@ -309,7 +311,7 @@ function TimerSection() {
                         alignItems: "center",
                     }}
                 >
-                    <Text className="text-lg font-[app-bold] text-center text-[#fff]">
+                    <Text className="text-lg font-[app-semi-bold] text-center text-[#fff]">
                         Dynamic Preview will closed in
                     </Text>
 
@@ -350,7 +352,7 @@ function TimerSection() {
                     >
                         <Text
                             style={{
-                                color: "#dadada",
+                                color: "gray",
                                 fontSize: 16,
                                 fontWeight: "900",
                                 fontFamily: "app-bold",
@@ -410,7 +412,7 @@ function DiamondWatermark() {
                             <MaterialCommunityIcons
                                 name="cards-diamond"
                                 size={DIAMOND_ICON_SIZE}
-                                color="#4fbee671"
+                                color="#fff"
                             />
                         </View>
                     ))}
@@ -425,8 +427,8 @@ const styles = StyleSheet.create({
         width: '92%',
         backgroundColor: BACKGROUND,
         borderRadius: 16,
-        borderBottomWidth: 18,
-        borderTopWidth: 18,
+        borderBottomWidth: 15,
+        borderTopWidth: 15,
         borderColor: '#4fbee6',
 
         // Drop shadow
@@ -526,8 +528,8 @@ const styles = StyleSheet.create({
     },
     utsLabel: {
         color: '#000',
-        fontSize: 14,
-        fontFamily: 'app-semi-bold',
+        fontSize: 12,
+        fontFamily: 'app-regular',
     },
     utsValue: {
         color: '#000',
@@ -536,10 +538,10 @@ const styles = StyleSheet.create({
     },
     fieldLabel: {
         color: '#A8A7AD',
-        fontSize: 9,
-        fontWeight: '700',
-        letterSpacing: 1,
-        textTransform: 'uppercase',
+        fontSize: 13,
+        fontWeight: '500',
+        // letterSpacing: 1,
+        // textTransform: 'uppercase',
         marginBottom: 3,
         fontFamily: 'app-semi-bold',
     },
@@ -551,14 +553,14 @@ const styles = StyleSheet.create({
     },
     stationText: {
         color: '#000',
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: '600',
         flex: 1,
         textTransform: 'uppercase',
         fontFamily: 'app-semi-bold',
     },
     distanceText: {
-        color: '#A8A7AD',
+        color: '#000',
         fontSize: 11,
         fontWeight: '600',
         marginHorizontal: 4,
@@ -566,7 +568,4 @@ const styles = StyleSheet.create({
     },
 });
 
-function usePreventScreenCapture() {
-    throw new Error("Function not implemented.");
-}
 

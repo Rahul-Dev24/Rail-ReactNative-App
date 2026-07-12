@@ -74,8 +74,6 @@ const DO_YOU_KNOW_DATA = [
 
 export default function HomeScreen() {
   return (
-    // <SafeAreaView style={styles.container}>
-    //   <ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.scrollContent}>
     <View >
       {/* Welcome Greeting */}
       <View style={styles.greetingContainer}>
@@ -97,7 +95,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
 
           {/* Unreserved Card */}
-          <TouchableOpacity style={styles.plannerCard} onPress={() => { router.replace('/(un-reserved-booking)/firstPage') }} >
+          <TouchableOpacity style={styles.plannerCard} onPress={() => { router.push('/un-reserved-booking/firstPage') }} >
             <View style={[styles.cardIllustration, { backgroundColor: COLORS.cardUnreserved }]}>
               <Image source={Images.unseserve} style={styles.cardImage}
                 resizeMode="cover" />
@@ -243,7 +241,7 @@ export default function HomeScreen() {
       </View>
 
 
-      <View style={[styles.sectionContainer, { marginBottom: 30 }]}>
+      <View style={[styles.sectionContainer, { marginBottom: 60 }]}>
         <Text style={{ ...styles.sectionTitle }} className='z-50'>Follow Us On Social Media Platforms</Text>
         <View className="flex justify-center items-center -mt-10 h-fit relative w-full" >
           <Image source={Images.SocialMedia} style={{
@@ -295,8 +293,6 @@ export default function HomeScreen() {
           </View>
         </View>
       </View>
-      {/* </ScrollView>
-    </SafeAreaView> */}
     </View>
   );
 }

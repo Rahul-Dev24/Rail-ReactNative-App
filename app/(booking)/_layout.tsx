@@ -86,7 +86,7 @@ function HeaderComponent() {
     useStatusBar({ style: 'light' });
 
     const goBack = () => {
-        router.replace("/(tabs)/home");
+        router.push("/(tabs)/home");
     };
 
     return (
@@ -110,8 +110,7 @@ function HeaderComponent() {
                     />
 
                     <Text
-                        style={{ fontFamily: "app-regular" }}
-                        className="text-white text-lg"
+                        className="text-white text-lg font-[app-bold]"
                     >
                         My Bookings
                     </Text>

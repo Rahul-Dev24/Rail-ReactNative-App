@@ -22,7 +22,7 @@ export default function TabLayout() {
 
         await AsyncStorage.removeItem("token");
 
-        router.replace("/(auth)/login");
+        router.push("/(auth)/login");
 
     }
     return (
@@ -77,7 +77,7 @@ function TabsLayout() {
                                 icon={
                                     <MaterialIcons
                                         name="confirmation-number"
-                                        size={24}
+                                        size={28}
                                         color={focused ? C.active : C.inactive}
                                     />
                                 }
@@ -197,8 +197,9 @@ const styles = StyleSheet.create({
         borderTopWidth: 0,
         height: Platform.OS === "ios" ? 84 : 78,
         paddingBottom: Platform.OS === "ios" ? 20 : 8,
-        paddingTop: 10,
+        paddingTop: 12,
         elevation: 0,
+        marginTop: -24
     },
 
     tabItem: {

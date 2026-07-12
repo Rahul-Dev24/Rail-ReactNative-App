@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 
 export default function tickets() {
     useEffect(() => {
-        router.replace("/(booking)/upcoming");
+        router.push("/(booking)/upcoming");
     }, []);
 
     return null;
