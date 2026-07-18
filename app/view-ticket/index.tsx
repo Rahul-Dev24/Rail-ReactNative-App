@@ -1,11 +1,12 @@
 import { AnimatedTimerText } from "@/components/AnimatedDigit";
 import { StatusBarBackground } from "@/components/StatusBarBackground";
+import Images from "@/constant/image";
 import { useStatusBar } from "@/hooks/useStatusBar";
 import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { usePreventScreenCapture } from "expo-screen-capture";
 import { useEffect, useRef, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const NOTCH_SIZE = 25;
@@ -50,7 +51,7 @@ export default function Index() {
                 // className="flex-1"
                 showsVerticalScrollIndicator={true}
                 contentContainerStyle={{
-                    backgroundColor: "#dadadacc",
+                    backgroundColor: "#dadada95",
                     paddingBottom: 20,
                 }}
             >
@@ -169,25 +170,28 @@ export default function Index() {
                     </View>
                     <View className='w-[4%] bg-[#dadadacc] z-50'></View>
                 </View>
-                <View className="m-3 flex items-center justify-center p-2 bg-red-200 rounded-2xl">
-                    <Text className="text-[red] font-[app-regular] text-sm -mb-0.5">Note: This ticket is non refundable. Ticket is stored</Text>
-                    <Text className="text-[red] font-[app-regular] text-sm -mb-0.5">locally on the device. Please do not change your</Text>
-                    <Text className="text-[red] font-[app-regular] text-sm">handset or perform fectory reset</Text>
+                <View className="m-3 flex items-center justify-center p-2 my-4 bg-red-100 rounded-2xl">
+                    <Text className="text-[red] font-[app-regular] text-[12px] -mb-0.5">Note: This ticket is non refundable. Ticket is stored</Text>
+                    <Text className="text-[red] font-[app-regular] text-[12px] -mb-0.5">locally on the device. Please do not change your</Text>
+                    <Text className="text-[red] font-[app-regular] text-[12px]">handset or perform fectory reset</Text>
                 </View>
-                <View className="m-3 flex items-center justify-center p-2 bg-red-200 rounded-2xl">
-                    <Text className="text-[red] font-[app-regular] text-sm -mb-0.5">Note: This ticket is non refundable. Ticket is stored</Text>
-                    <Text className="text-[red] font-[app-regular] text-sm -mb-0.5">locally on the device. Please do not change your</Text>
-                    <Text className="text-[red] font-[app-regular] text-sm">handset or perform fectory reset</Text>
-                </View>
-                <View className="m-3 flex items-center justify-center p-2 bg-red-200 rounded-2xl">
-                    <Text className="text-[red] font-[app-regular] text-sm -mb-0.5">Note: This ticket is non refundable. Ticket is stored</Text>
-                    <Text className="text-[red] font-[app-regular] text-sm -mb-0.5">locally on the device. Please do not change your</Text>
-                    <Text className="text-[red] font-[app-regular] text-sm">handset or perform fectory reset</Text>
-                </View>
-                <View className="m-3 flex items-center justify-center p-2 bg-red-200 rounded-2xl">
-                    <Text className="text-[red] font-[app-regular] text-sm -mb-0.5">Note: This ticket is non refundable. Ticket is stored</Text>
-                    <Text className="text-[red] font-[app-regular] text-sm -mb-0.5">locally on the device. Please do not change your</Text>
-                    <Text className="text-[red] font-[app-regular] text-sm">handset or perform fectory reset</Text>
+                <TouchableOpacity
+                    activeOpacity={0.85}
+                    className="bg-blue-600 rounded-full py-3 items-center mx-4"
+                    onPress={() => router.push("/un-reserved-booking/secondPage")}
+                >
+                    <Text className="text-white text-lg font-[app-regular]">
+                        Upgrade to Superfast
+                    </Text>
+                </TouchableOpacity>
+                <View className="items-center justify-center bg-white my-3 py-4">
+                    <View className="w-58 h-58">
+                        <Image
+                            source={Images.qr}
+                            className="w-full h-full"
+                            resizeMode="contain"
+                        />
+                    </View>
                 </View>
                 <View className="flex items-start justify-center p-4 mb-10 bg-white" >
                     <Text className="font-[app-regular] font-bold mb-2">Do you know?</Text>
@@ -292,7 +296,7 @@ function TimerSection() {
                         <Text
                             style={{
                                 color: "gray",
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: "900",
                                 fontFamily: "app-regular",
                                 textAlign: "center",
@@ -353,7 +357,7 @@ function TimerSection() {
                         <Text
                             style={{
                                 color: "gray",
-                                fontSize: 16,
+                                fontSize: 18,
                                 fontWeight: "900",
                                 fontFamily: "app-bold",
                                 textAlign: "center",

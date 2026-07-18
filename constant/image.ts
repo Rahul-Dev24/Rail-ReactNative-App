@@ -20,6 +20,7 @@ const Images = {
     steamTrain: require('../assets/images/steam-train-heritage.jpg'),
     greenValley: require('../assets/images/viaduct-green-valley.jpg'),
     track: require('../assets/images/track.jpeg'),
+    qr: require("../assets/images/qr.png")
 
 };
 
