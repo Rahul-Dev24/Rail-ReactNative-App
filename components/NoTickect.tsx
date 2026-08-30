@@ -1,7 +1,7 @@
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Text, View } from "react-native";
 
-export function NoTickect() {
+export default function NoTickect() {
     return (
         <View className="flex-1 justify-center items-center">
             <FontAwesome6 name="ticket" size={80} color="#bfbfbf" />

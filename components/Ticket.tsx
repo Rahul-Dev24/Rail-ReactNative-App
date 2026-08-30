@@ -1,3 +1,4 @@
+import { getBookingDate } from '@/constant/date';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -19,7 +20,7 @@ const BACKGROUND = '#F6F6F6';
 export const TicketCard: React.FC<TicketCardProps> = ({
     ticketType = 'MONTHLY',
     utsCode = 'XA74EDI00C',
-    bookingDate = 'Thu, 4 Jun 26',
+    bookingDate = getBookingDate(new Date()),
     sourceStation = 'GUMMIDIPUNDI',
     destinationStation = 'GUINDY',
     distance = '63 km',

@@ -1,9 +1,7 @@
-import { Text, View } from "react-native";
+import NoTickect from "@/components/NoTickect";
 
 export default function All() {
     return (
-        <View>
-            <Text>All</Text>
-        </View>
+        <NoTickect />
     )
 }

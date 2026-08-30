@@ -1,5 +1,6 @@
 import { AnimatedTimerText } from "@/components/AnimatedDigit";
 import { StatusBarBackground } from "@/components/StatusBarBackground";
+import { getAfter30DaysDate, getBookingFromDate } from "@/constant/date";
 import Images from "@/constant/image";
 import { useStatusBar } from "@/hooks/useStatusBar";
 import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -28,6 +29,9 @@ export default function Index() {
     useStatusBar({ style: 'light' });
 
     const [sheetOpen, setSheetOpen] = useState(false);
+    const bookingDate = getBookingFromDate(new Date(), true);
+    const validFrom = getBookingFromDate(new Date(), false);
+    const validTill = getAfter30DaysDate(new Date());
 
     const goBack = () => {
         router.push("/(tabs)/booking/upcoming");
@@ -99,18 +103,18 @@ export default function Index() {
                                 </View>
                                 <View style={{ alignItems: 'flex-end' }}>
                                     <Text style={styles.fieldLabel}>Booking Date</Text>
-                                    <Text style={styles.fieldValue}>03/06/2023</Text>
+                                    <Text style={styles.fieldValue}>{bookingDate}</Text>
                                 </View>
                             </View>
 
                             <View style={styles.row}>
                                 <View>
                                     <Text style={styles.fieldLabel}>Valid From</Text>
-                                    <Text style={styles.fieldValue}>19/05/2023</Text>
+                                    <Text style={styles.fieldValue}>{validFrom}</Text>
                                 </View>
                                 <View style={{ alignItems: 'flex-end' }}>
                                     <Text style={styles.fieldLabel}>*Valid Till</Text>
-                                    <Text style={styles.fieldValue}>03/06/2023</Text>
+                                    <Text style={styles.fieldValue}>{validTill}</Text>
                                 </View>
                             </View>
 

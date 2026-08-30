@@ -72,7 +72,6 @@ export default function Upcoming() {
                 <TicketCard
                     ticketType="MONTHLY"
                     utsCode="XA74EDI00C"
-                    bookingDate="Thu, 4 Jun 26"
                     sourceStation="GUMMIDIPUNDI"
                     destinationStation="GUINDY"
                     distance="63 km"
@@ -80,36 +79,6 @@ export default function Upcoming() {
                     onViewDetails={() => {
                         router.push("../../view-ticket");
                     }}
-                />
-                <TicketCard
-                    ticketType="MONTHLY"
-                    utsCode="XA74EDI00C"
-                    bookingDate="Thu, 4 Jun 26"
-                    sourceStation="GUMMIDIPUNDI"
-                    destinationStation="GUINDY"
-                    distance="63 km"
-                    onBookAgain={() => console.log("Book Again")}
-                    onViewDetails={() => console.log("View Details")}
-                />
-                <TicketCard
-                    ticketType="MONTHLY"
-                    utsCode="XA74EDI00C"
-                    bookingDate="Thu, 4 Jun 26"
-                    sourceStation="GUMMIDIPUNDI"
-                    destinationStation="GUINDY"
-                    distance="63 km"
-                    onBookAgain={() => console.log("Book Again")}
-                    onViewDetails={() => console.log("View Details")}
-                />
-                <TicketCard
-                    ticketType="MONTHLY"
-                    utsCode="XA74EDI00C"
-                    bookingDate="Thu, 4 Jun 26"
-                    sourceStation="GUMMIDIPUNDI"
-                    destinationStation="GUINDY"
-                    distance="63 km"
-                    onBookAgain={() => console.log("Book Again")}
-                    onViewDetails={() => console.log("View Details")}
                 />
             </View>
         </ScrollView>

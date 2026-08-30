@@ -1,3 +1,4 @@
+import { getBookingDate } from '@/constant/date';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import {
@@ -12,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const { width } = Dimensions.get('window');
 
 export default function TicketLayout() {
+    const bookingDate = getBookingDate(new Date());
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.ticketWrapper}>
@@ -26,7 +28,7 @@ export default function TicketLayout() {
 
                     {/* Date Section */}
                     <View style={styles.dateSection}>
-                        <Text style={styles.dateText}>Thu, 4 Jun 26</Text>
+                        <Text style={styles.dateText}>{bookingDate}</Text>
                     </View>
 
                     {/* Divider */}

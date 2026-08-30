@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+
+import NoTickect from "@/components/NoTickect";
 
 export default function Completed() {
     return (
-        <View>
-            <Text>completed</Text>
-        </View>
+
+        <NoTickect />
+
     )
 }

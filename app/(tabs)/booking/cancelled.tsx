@@ -1,9 +1,7 @@
-import { Text, View } from "react-native";
+import NoTickect from "@/components/NoTickect";
 
 export default function cancelled() {
     return (
-        <View>
-            <Text>cancelled</Text>
-        </View>
+        <NoTickect />
     )
 }
